@@ -9,13 +9,32 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
+// Import security middleware
+const {
+  generalLimiter,
+  authLimiter,
+  createLimiter,
+  apiLimiter,
+  helmetConfig,
+  sanitizeInput
+} = require('./middleware/security');
+
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Apply security headers
+app.use(helmetConfig);
+
+// Apply general rate limiting
+app.use(generalLimiter);
+
 // Configure middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Apply input sanitization
+app.use(sanitizeInput);
 const publicPath = path.join(__dirname, 'public');
 console.log('Serving static files from:', publicPath);
 app.use(express.static(publicPath));
@@ -63,17 +82,22 @@ if (!fs.existsSync('./public/uploads')) {
   fs.mkdirSync('./public/uploads', { recursive: true });
 }
 
-// Import routes - using Supabase versions
+// Import routes - ALL using Supabase versions for production compatibility
 const indexRoutes = require('./routes/index');
-const authRoutes = require('./routes/auth_supabase'); // Using Supabase auth
-const profileRoutes = require('./routes/profile');
-const glyphRoutes = require('./routes/glyph');
-const feedRoutes = require('./routes/feed_supabase'); // Using Supabase feed
-const whisperRoutes = require('./routes/whisper');
-const forumRoutes = require('./routes/forum_supabase'); // Using Supabase forum
-const cryptoRoutes = require('./routes/crypto');
-const apiRoutes = require('./routes/api');
-const scrapyardRoutes = require('./routes/scrapyard_supabase'); // Scrapyard marketplace
+const authRoutes = require('./routes/auth_supabase');
+const profileRoutes = require('./routes/profile'); // Already uses Supabase
+const glyphRoutes = require('./routes/glyph_supabase');
+const feedRoutes = require('./routes/feed_supabase');
+const whisperRoutes = require('./routes/whisper_supabase');
+const forumRoutes = require('./routes/forum_supabase');
+const cryptoRoutes = require('./routes/crypto_supabase');
+const apiRoutes = require('./routes/api_supabase');
+const scrapyardRoutes = require('./routes/scrapyard_supabase');
+const activityRoutes = require('./routes/activity_supabase');
+const preferencesRoutes = require('./routes/preferences_supabase');
+const searchRoutes = require('./routes/search');
+const adminRoutes = require('./routes/admin');
+const usersRoutes = require('./routes/users');
 
 // Use routes
 app.use('/', indexRoutes);
@@ -85,7 +109,12 @@ app.use('/whisper', whisperRoutes);
 app.use('/forum', forumRoutes);
 app.use('/crypto', cryptoRoutes);
 app.use('/api', apiRoutes);
-app.use('/scrapyard', scrapyardRoutes); // Add scrapyard routes
+app.use('/scrapyard', scrapyardRoutes);
+app.use('/activity', activityRoutes);
+app.use('/preferences', preferencesRoutes);
+app.use('/search', searchRoutes);
+app.use('/admin', adminRoutes);
+app.use('/users', usersRoutes);
 
 // Alias route for /bleedstream/new (redirects to /feed/new for backward compatibility)
 app.get('/bleedstream/new', isAuthenticated, (req, res) => {

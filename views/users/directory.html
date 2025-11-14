@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Directory - Elriel Terminal</title>
+    <link rel="stylesheet" href="/css/terminal.css">
+    <style>
+        .directory-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .directory-controls {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .directory-controls input, .directory-controls select {
+            padding: 10px;
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #00ff00;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .user-card:hover {
+            background: rgba(0, 255, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .user-card .username {
+            color: #00ff00;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .user-card .username a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+
+        .user-card .username a:hover {
+            text-decoration: underline;
+        }
+
+        .user-card .status {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .user-card .stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .user-card .stat {
+            color: #888;
+        }
+
+        .user-card .stat-value {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .user-card .glyph-preview {
+            width: 60px;
+            height: 60px;
+            margin-top: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .pagination button {
+            padding: 10px 20px;
+            background: #00ff00;
+            border: none;
+            color: #000;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+        }
+
+        .pagination button:hover {
+            background: #00dd00;
+        }
+
+        .pagination button:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .member-since {
+            color: #666;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-header">
+        <h1>ELRIEL USER DIRECTORY</h1>
+        <p class="subtitle">Connected nodes in the network...</p>
+    </div>
+
+    <nav class="terminal-nav">
+        <a href="/">Home</a>
+        <a href="/feed/bleedstream">Bleedstream</a>
+        <a href="/forum">Forum</a>
+        <a href="/users" class="active">Users</a>
+        <a href="/search">Search</a>
+    </nav>
+
+    <div class="directory-container">
+        <div class="directory-controls">
+            <input type="text" id="searchInput" placeholder="Search users...">
+            <select id="sortSelect">
+                <option value="recent">Recent</option>
+                <option value="alphabetical">Alphabetical</option>
+            </select>
+        </div>
+
+        <div class="users-grid" id="usersGrid">
+            <!-- Users will be loaded here -->
+        </div>
+
+        <div class="pagination">
+            <button id="prevButton" onclick="changePage(-1)">← Previous</button>
+            <span id="pageInfo" style="color: #888; padding: 10px;"></span>
+            <button id="nextButton" onclick="changePage(1)">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        const data = __DATA__;
+        let currentPage = data.currentPage || 1;
+        let currentSort = data.sort || 'recent';
+
+        function displayUsers(users) {
+            const grid = document.getElementById('usersGrid');
+
+            if (!users || users.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #888;">No users found</p>';
+                return;
+            }
+
+            const html = users.map(user => {
+                const profile = user.profiles || {};
+                const glyph = profile.glyphs || {};
+                const glyphSvg = glyph.svg_data || '';
+
+                return `
+                    <div class="user-card">
+                        <div class="username">
+                            <a href="/users/${user.username}">@${user.username}</a>
+                        </div>
+                        ${profile.status ? `<div class="status">${escapeHtml(profile.status)}</div>` : ''}
+                        ${glyphSvg ? `<div class="glyph-preview">${glyphSvg}</div>` : ''}
+                        <div class="stats">
+                            <div class="stat">
+                                Reputation: <span class="stat-value">${profile.reputation || 0}</span>
+                            </div>
+                        </div>
+                        <div class="member-since">
+                            Member since ${new Date(user.created_at).toLocaleDateString()}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            grid.innerHTML = html;
+        }
+
+        function updatePageInfo() {
+            document.getElementById('pageInfo').textContent = `Page ${currentPage}`;
+        }
+
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage < 1) return;
+
+            currentPage = newPage;
+            loadUsers();
+        }
+
+        async function loadUsers() {
+            const search = document.getElementById('searchInput').value;
+            const sort = document.getElementById('sortSelect').value;
+
+            try {
+                const response = await fetch(
+                    `/users/api/list?page=${currentPage}&sort=${sort}&search=${encodeURIComponent(search)}`
+                );
+                const result = await response.json();
+
+                if (result.success) {
+                    displayUsers(result.users);
+                    updatePageInfo();
+
+                    // Update pagination buttons
+                    document.getElementById('prevButton').disabled = currentPage === 1;
+                    document.getElementById('nextButton').disabled = !result.pagination.hasMore;
+                }
+            } catch (error) {
+                console.error('Failed to load users:', error);
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initial display
+        displayUsers(data.users);
+        updatePageInfo();
+
+        // Search and sort handlers
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentPage = 1;
+                loadUsers();
+            }, 500);
+        });
+
+        document.getElementById('sortSelect').addEventListener('change', () => {
+            currentPage = 1;
+            loadUsers();
+        });
+
+        // Update pagination state
+        document.getElementById('prevButton').disabled = currentPage === 1;
+        if (data.users && data.users.length < (data.limit || 20)) {
+            document.getElementById('nextButton').disabled = true;
+        }
+    </script>
+</body>
+</html>
