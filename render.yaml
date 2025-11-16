@@ -6,8 +6,7 @@ services:
     plan: free
     region: oregon  # You can choose a different region
     buildCommand: npm install
-    startCommand: node --expose-gc app_render.js
-    # Using --expose-gc flag to enable garbage collection
+    startCommand: node app.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
@@ -23,9 +22,5 @@ services:
       - key: SUPABASE_SERVICE_KEY
         sync: false
       - key: NODE_OPTIONS
-        value: "--max-old-space-size=384"
+        value: "--max-old-space-size=512"
     autoDeploy: true
-    disk:
-      name: tmp
-      mountPath: /tmp
-      sizeGB: 0.5

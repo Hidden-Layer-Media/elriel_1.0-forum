@@ -121,6 +121,16 @@ app.get('/bleedstream/new', isAuthenticated, (req, res) => {
   res.redirect('/feed/new');
 });
 
+// Health check endpoint for deployment monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
