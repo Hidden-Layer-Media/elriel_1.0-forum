@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - Elriel Terminal</title>
+    <link rel="stylesheet" href="/css/terminal.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <style>
+        .search-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 20px;
+            border: 1px solid #00ff00;
+        }
+
+        .search-box input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+        }
+
+        .search-box select {
+            padding: 10px;
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            margin: 0 10px;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background: #00ff00;
+            border: none;
+            color: #000;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background: #00dd00;
+        }
+
+        .results-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .result-section {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #00ff00;
+            padding: 20px;
+        }
+
+        .result-section h2 {
+            color: #00ff00;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 10px;
+        }
+
+        .result-item {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid #00ff00;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .result-item:hover {
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .result-item a {
+            color: #00ff00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .result-item a:hover {
+            text-decoration: underline;
+        }
+
+        .result-meta {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .result-content {
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .loading {
+            text-align: center;
+            color: #00ff00;
+            padding: 20px;
+        }
+
+        .search-stats {
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-header">
+        <h1>ELRIEL TERMINAL SEARCH</h1>
+        <p class="subtitle">Search across the network...</p>
+    </div>
+
+    <nav class="terminal-nav">
+        <a href="/">Home</a>
+        <a href="/feed/bleedstream">Bleedstream</a>
+        <a href="/forum">Forum</a>
+        <a href="/whisper/board">Whisperboard</a>
+        <a href="/search" class="active">Search</a>
+    </nav>
+
+    <div class="search-container">
+        <div class="search-box">
+            <form id="searchForm">
+                <input type="text" id="searchQuery" placeholder="Enter search query..." required autofocus>
+                <select id="searchType">
+                    <option value="all">All</option>
+                    <option value="users">Users</option>
+                    <option value="posts">Posts</option>
+                    <option value="whispers">Whispers</option>
+                    <option value="forum">Forum Topics</option>
+                </select>
+                <button type="submit">SEARCH</button>
+            </form>
+        </div>
+
+        <div id="searchStats" class="search-stats" style="display: none;"></div>
+        <div id="loadingIndicator" class="loading" style="display: none;">
+            Searching the network...
+        </div>
+
+        <div id="resultsContainer" class="results-container"></div>
+    </div>
+
+    <script>
+        const data = __DATA__;
+        const searchForm = document.getElementById('searchForm');
+        const searchQuery = document.getElementById('searchQuery');
+        const searchType = document.getElementById('searchType');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const searchStats = document.getElementById('searchStats');
+
+        // Check for URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('q')) {
+            searchQuery.value = urlParams.get('q');
+            if (urlParams.has('type')) {
+                searchType.value = urlParams.get('type');
+            }
+            performSearch();
+        }
+
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            performSearch();
+        });
+
+        async function performSearch() {
+            const query = searchQuery.value.trim();
+            const type = searchType.value;
+
+            if (query.length < 2) {
+                alert('Please enter at least 2 characters');
+                return;
+            }
+
+            // Update URL
+            const newUrl = `/search?q=${encodeURIComponent(query)}&type=${type}`;
+            window.history.pushState({}, '', newUrl);
+
+            // Show loading
+            loadingIndicator.style.display = 'block';
+            resultsContainer.innerHTML = '';
+            searchStats.style.display = 'none';
+
+            try {
+                const response = await fetch(`/search/api?q=${encodeURIComponent(query)}&type=${type}`);
+                const data = await response.json();
+
+                loadingIndicator.style.display = 'none';
+
+                if (!data.success) {
+                    resultsContainer.innerHTML = '<div class="no-results">Search failed: ' + data.message + '</div>';
+                    return;
+                }
+
+                displayResults(data);
+            } catch (error) {
+                console.error('Search error:', error);
+                loadingIndicator.style.display = 'none';
+                resultsContainer.innerHTML = '<div class="no-results">Network error. Please try again.</div>';
+            }
+        }
+
+        function displayResults(data) {
+            const { results, totalResults, query } = data;
+
+            searchStats.textContent = `Found ${totalResults} results for "${query}"`;
+            searchStats.style.display = 'block';
+
+            if (totalResults === 0) {
+                resultsContainer.innerHTML = '<div class="no-results">No results found. Try different keywords.</div>';
+                return;
+            }
+
+            let html = '';
+
+            // Display users
+            if (results.users && results.users.length > 0) {
+                html += '<div class="result-section">';
+                html += '<h2>USERS (' + results.users.length + ')</h2>';
+                results.users.forEach(user => {
+                    html += `<div class="result-item">
+                        <a href="/profile/${user.id}">@${user.username}</a>
+                        <div class="result-meta">Joined: ${new Date(user.created_at).toLocaleDateString()}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+
+            // Display posts
+            if (results.posts && results.posts.length > 0) {
+                html += '<div class="result-section">';
+                html += '<h2>POSTS (' + results.posts.length + ')</h2>';
+                results.posts.forEach(post => {
+                    const preview = post.content.substring(0, 200) + (post.content.length > 200 ? '...' : '');
+                    html += `<div class="result-item">
+                        <a href="/feed/view/${post.id}">View Post</a>
+                        <div class="result-meta">By ${post.author} - ${new Date(post.createdAt).toLocaleString()}</div>
+                        <div class="result-content">${escapeHtml(preview)}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+
+            // Display whispers
+            if (results.whispers && results.whispers.length > 0) {
+                html += '<div class="result-section">';
+                html += '<h2>WHISPERS (' + results.whispers.length + ')</h2>';
+                results.whispers.forEach(whisper => {
+                    const preview = whisper.content.substring(0, 200) + (whisper.content.length > 200 ? '...' : '');
+                    html += `<div class="result-item">
+                        <a href="/whisper/view/${whisper.id}">View Whisper</a>
+                        <div class="result-meta">${new Date(whisper.created_at).toLocaleString()}</div>
+                        <div class="result-content">${escapeHtml(preview)}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+
+            // Display forum topics
+            if (results.forumTopics && results.forumTopics.length > 0) {
+                html += '<div class="result-section">';
+                html += '<h2>FORUM TOPICS (' + results.forumTopics.length + ')</h2>';
+                results.forumTopics.forEach(topic => {
+                    html += `<div class="result-item">
+                        <a href="/forum/topic/${topic.id}">${escapeHtml(topic.title)}</a>
+                        <div class="result-meta">By ${topic.author} - ${new Date(topic.createdAt).toLocaleString()}</div>
+                        <div class="result-content">${escapeHtml(topic.description || '')}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+
+            resultsContainer.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
