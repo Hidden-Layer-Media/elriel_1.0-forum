@@ -4,23 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BLEEDSTREAM | ELRIEL</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/glitch.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
   <link rel="stylesheet" href="/css/feed.css">
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
   <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
+  
+  <!-- Core Scripts -->
   <script src="/js/error-logger.js" defer></script>
-  <script src="/js/glitch.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
   <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
   <script src="/js/sidebar-manager.js" defer></script>
+  <script src="/js/performance-fixes.js" defer></script>
 </head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -29,9 +42,10 @@
       </div>
     </header>
 
-    <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
-
     <div class="content-wrapper">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
       <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
@@ -61,22 +75,23 @@
       </nav>
 
       <main class="main-content">
-        <section class="feed-panel">
+        <section class="panel feed-panel">
+          <div class="scanner-line"></div>
           <div class="panel-header">
             <h2>BLEEDSTREAM</h2>
             <div class="status-indicator">LIVE FEED</div>
           </div>
-          <div class="feed-content">
-            <div class="feed-controls">
-              <div class="form-group">
-                <label for="tag-filter">FILTER BY TAG:</label>
-                <select id="tag-filter">
+          <div class="panel-content">
+            <div class="feed-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+              <div class="form-group" style="margin: 0;">
+                <label for="tag-filter" style="margin-right: 0.5rem;">FILTER BY TAG:</label>
+                <select id="tag-filter" style="min-width: 150px;">
                   <option value="">ALL TAGS</option>
                   <!-- Tags will be injected here -->
                 </select>
               </div>
-              <div class="form-group">
-                <a href="/feed/new" class="new-post-btn">CREATE POST</a>
+              <div class="form-group" style="margin: 0;">
+                <a href="/feed/new" class="button new-post-btn">CREATE POST</a>
               </div>
             </div>
 
@@ -99,175 +114,124 @@
   </div>
 
   <script>
-    // Add error handling for data injection
-    let data, user, posts = [], tags = [], currentTag = null;
+    let data, user, posts, tags, currentTag;
     try {
-      // Inject data from server
-      data = JSON.parse('__DATA__'.replace(/\\n/g, "\\n")
-          .replace(/\\'/g, "\\'")
-          .replace(/\\"/g, '\\"')
-          .replace(/\\&/g, "\\&")
-          .replace(/\\r/g, "\\r")
-          .replace(/\\t/g, "\\t")
-          .replace(/\\b/g, "\\b")
-          .replace(/\\f/g, "\\f"));
+      data = __DATA__;
       user = data.user;
       posts = data.posts || [];
       tags = data.tags || [];
       currentTag = data.currentTag;
-      console.log("Data loaded successfully:", {
-        hasUser: !!user,
-        postCount: posts.length,
-        tagCount: tags.length
-      });
     } catch (err) {
-      console.error("Error parsing injected data:", err);
-      // Set default values
+      console.error('Error accessing __DATA__:', err);
       data = {};
       user = null;
       posts = [];
       tags = [];
     }
 
-    // Update user status in header
+    // Update user status
     const userStatusEl = document.getElementById('user-status');
-    if (userStatusEl) {
-      if (user) {
-        userStatusEl.innerHTML = `
-          <div class="logged-in">
-            <span class="username">${user.username}</span>
-            <div class="user-links">
-              <a href="/profile" class="win98-btn">PROFILE</a>
-              <a href="/auth/logout" class="win98-btn">LOGOUT</a>
-            </div>
+    if (user) {
+      userStatusEl.innerHTML = `
+        <div class="logged-in">
+          <span class="username">${user.username}</span>
+          <div class="user-links">
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
-        `;
-      } else {
-        userStatusEl.innerHTML = `
-          <div class="logged-out">
-            <a href="/auth/login" class="win98-btn login-btn">LOGIN</a>
-            <a href="/auth/register" class="win98-btn register-btn">REGISTER</a>
-          </div>
-        `;
-      }
+        </div>
+      `;
+    } else {
+      userStatusEl.innerHTML = `
+        <div class="logged-out">
+          <a href="/auth/login" class="button">LOGIN</a>
+          <a href="/auth/register" class="button">REGISTER</a>
+        </div>
+      `;
     }
 
-    // Populate tag filter dropdown
+    // Populate tag filter
     const tagFilterSelect = document.getElementById('tag-filter');
-    if (tagFilterSelect && tags.length > 0) {
+    if (tags.length > 0) {
       tags.forEach(tag => {
         if (tag && tag.trim()) {
           const option = document.createElement('option');
           option.value = tag;
           option.textContent = tag.toUpperCase();
+          if (currentTag === tag) option.selected = true;
           tagFilterSelect.appendChild(option);
         }
       });
 
-      // Set current tag filter
-      if (currentTag) {
-        tagFilterSelect.value = currentTag;
-      }
-
-      // Handle tag filter change
       tagFilterSelect.addEventListener('change', (e) => {
         const selectedTag = e.target.value;
-        if (selectedTag) {
-          window.location.href = `/feed/bleedstream?tag=${encodeURIComponent(selectedTag)}`;
-        } else {
-          window.location.href = '/feed/bleedstream';
-        }
+        window.location.href = selectedTag ? `/feed/bleedstream?tag=${encodeURIComponent(selectedTag)}` : '/feed/bleedstream';
       });
     }
 
     // Display posts
     const postListEl = document.getElementById('post-list');
-    if (postListEl) {
-      // Clear any existing content
-      postListEl.innerHTML = '';
+    if (posts.length > 0) {
+      posts.forEach(post => {
+        if (!post) return;
 
-      if (posts.length > 0) {
-        posts.forEach(post => {
-          if (!post) return; // Skip invalid posts
+        const postEl = document.createElement('div');
+        postEl.className = 'bleedstream-item';
+        postEl.style.cssText = 'background: var(--bg-panel); border: var(--border-secondary); padding: 1rem; margin-bottom: 1rem; position: relative; transition: all 0.3s ease;';
 
-          const postEl = document.createElement('div');
-          postEl.className = 'bleedstream-item';
+        const tagsHtml = post.tags ? post.tags.split(',')
+          .filter(tag => tag && tag.trim())
+          .map(tag => `<a href="/feed/bleedstream?tag=${encodeURIComponent(tag.trim())}" style="display: inline-block; padding: 0.2rem 0.5rem; margin: 0.2rem; background: var(--bg-inset); border: 1px solid var(--terminal-dim-green); font-size: 0.8rem; color: var(--terminal-green); text-decoration: none;">${tag.trim().toUpperCase()}</a>`)
+          .join('') : '';
 
-          // Create background element if there's a glyph
-          let backgroundStyle = '';
-          if (post.glyph_svg) {
-            try {
-              backgroundStyle = `style="background-image: url('data:image/svg+xml;base64,${btoa(post.glyph_svg)}');"`;
-            } catch (e) {
-              console.error('Error encoding SVG:', e);
-            }
-          }
-
-          // Process tags safely
-          let tagsHtml = '';
-          if (post.tags) {
-            try {
-              tagsHtml = post.tags.split(',')
-                .filter(tag => tag && tag.trim())
-                .map(tag => {
-                  const cleanTag = tag.trim();
-                  return `<a href="/feed/bleedstream?tag=${encodeURIComponent(cleanTag)}" class="bleedstream-tag">${cleanTag.toUpperCase()}</a>`;
-                })
-                .join('');
-            } catch (e) {
-              console.error('Error processing tags:', e);
-            }
-          }
-
-          // Create post content with proper escaping
-          const title = post.title || 'Untitled Post';
-          const username = post.username || 'Anonymous';
-          const content = post.content ? post.content.substring(0, 150) + '...' : 'No content available';
-          const createdAt = post.created_at ? new Date(post.created_at).toLocaleString() : 'Unknown date';
-          const postId = post.id || '0';
-          const isEncrypted = post.is_encrypted ? '<span class="post-encrypted">ENCRYPTED</span>' : '';
-
-          postEl.innerHTML = `
-            <div class="bleedstream-background" ${backgroundStyle}></div>
-            <div class="bleedstream-content">
-              <div class="bleedstream-title"><a href="/feed/post/${postId}">${title}</a></div>
-              <div class="bleedstream-author">BY: <a href="/profile/user/${username}">${username}</a></div>
-              <div class="bleedstream-text">${content}</div>
-              <div class="bleedstream-tags">${tagsHtml}</div>
+        postEl.innerHTML = `
+          <div style="margin-bottom: 0.5rem;">
+            <a href="/feed/post/${post.id}" style="color: var(--terminal-green); font-size: 1.2rem; text-decoration: none;">${post.title || 'Untitled'}</a>
+          </div>
+          <div style="margin-bottom: 0.5rem; color: var(--terminal-dim-green); font-size: 0.9rem;">
+            BY: <a href="/profile/user/${post.username}" style="color: var(--terminal-green);">${post.username || 'Anonymous'}</a>
+          </div>
+          <div style="margin-bottom: 0.5rem; color: var(--text-primary);">
+            ${post.content ? post.content.substring(0, 200) + '...' : 'No content'}
+          </div>
+          ${tagsHtml ? `<div style="margin-bottom: 0.5rem;">${tagsHtml}</div>` : ''}
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--terminal-dim-green);">
+            <span>${new Date(post.created_at).toLocaleString()}</span>
+            <div>
+              <a href="/feed/post/${post.id}" class="button" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">VIEW</a>
+              ${post.is_encrypted ? '<span style="margin-left: 0.5rem; color: var(--terminal-red);">ENCRYPTED</span>' : ''}
             </div>
-            <div class="bleedstream-footer">
-              <div class="bleedstream-time">${createdAt}</div>
-              <div class="bleedstream-actions">
-                <a href="/feed/post/${postId}" class="bleedstream-action">VIEW</a>
-                ${isEncrypted}
-              </div>
-            </div>
-          `;
-          postListEl.appendChild(postEl);
+          </div>
+        `;
+        
+        postEl.addEventListener('mouseenter', () => {
+          postEl.style.boxShadow = 'var(--glow-medium)';
+          postEl.style.borderColor = 'var(--terminal-green)';
         });
-      } else {
-        postListEl.innerHTML = '<div class="no-posts-message">NO POSTS FOUND IN THE BLEEDSTREAM.</div>';
-      }
-    }
+        
+        postEl.addEventListener('mouseleave', () => {
+          postEl.style.boxShadow = '';
+          postEl.style.borderColor = 'var(--terminal-dim-green)';
+        });
 
-    // Toggle glitch effects
-    const toggleGlitchBtn = document.getElementById('toggle-glitch');
-    if (toggleGlitchBtn) {
-      toggleGlitchBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.body.classList.toggle('glitch-active');
-        // Store preference in localStorage
-        localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
+        postListEl.appendChild(postEl);
       });
+    } else {
+      postListEl.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--terminal-dim-green);">NO POSTS FOUND IN THE BLEEDSTREAM.</div>';
     }
 
-    // Check if glitch effects were previously enabled
-    const glitchActive = localStorage.getItem('glitch-active');
-    if (glitchActive === 'true') {
+    // Toggle glitch
+    document.getElementById('toggle-glitch').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
+    });
+
+    if (localStorage.getItem('glitch-active') === 'true') {
       document.body.classList.add('glitch-active');
     }
 
-    // Note: Sidebar navigation is now handled by sidebar-manager.js
+    console.log('Bleedstream initialized');
   </script>
 </body>
 </html>

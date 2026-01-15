@@ -4,19 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VIEW POST | ELRIEL</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/glitch.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
   <link rel="stylesheet" href="/css/feed.css">
-  <script src="/js/glitch.js" defer></script>
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
+  <script src="/js/performance-fixes.js" defer></script>
 </head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -26,12 +43,15 @@
     </header>
 
     <div class="content-wrapper">
-      <nav class="sidebar">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
+      <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
           <ul class="nav-links">
             <li><a href="/">TERMINAL</a></li>
-            <li><a href="/feed/bleedstream">BLEEDSTREAM</a></li>
+            <li><a href="/feed/bleedstream" class="active">BLEEDSTREAM</a></li>
             <li><a href="/glyph/crucible">GLYPH CRUCIBLE</a></li>
             <li><a href="/whisper/board">WHISPERBOARD</a></li>
             <li><a href="/forum/scrapyard">SCRAPYARD</a></li>
@@ -55,35 +75,36 @@
       </nav>
 
       <main class="main-content">
-        <section class="view-post-panel">
+        <section class="panel view-post-panel">
+          <div class="scanner-line"></div>
           <div class="panel-header">
             <h2>POST DETAILS</h2>
             <div class="status-indicator">ARCHIVE</div>
           </div>
-          <div class="view-post-content">
-            <div class="view-post-header">
-              <div class="view-post-title" id="post-title"></div>
-              <div class="view-post-meta">
-                <span class="view-post-author">BY: <a href="#" id="post-author-link"></a></span>
+          <div class="panel-content">
+            <div class="view-post-header" style="margin-bottom: 1.5rem;">
+              <h3 id="post-title" style="color: var(--terminal-green); font-size: 1.5rem; margin-bottom: 1rem;"></h3>
+              <div class="view-post-meta" style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.9rem; color: var(--terminal-dim-green);">
+                <span class="view-post-author">BY: <a href="#" id="post-author-link" style="color: var(--terminal-green);"></a></span>
                 <span class="view-post-date" id="post-date"></span>
-                <span class="view-post-encrypted" id="post-encrypted" style="display: none;">ENCRYPTED</span>
+                <span class="view-post-encrypted" id="post-encrypted" style="display: none; color: var(--terminal-red);">ENCRYPTED</span>
               </div>
-              <div class="view-post-glyph" id="post-glyph" style="display: none;">
+              <div class="view-post-glyph" id="post-glyph" style="display: none; width: 100px; height: 100px; margin: 1rem 0; border: 2px solid var(--terminal-green); padding: 0.5rem;">
                 <!-- Post glyph will be injected here -->
               </div>
             </div>
 
-            <div class="view-post-body" id="post-body">
+            <div class="view-post-body" id="post-body" style="padding: 1.5rem; background: var(--bg-inset); border: var(--border-primary); margin-bottom: 1.5rem; line-height: 1.6; color: var(--text-primary);">
               <!-- Post content will be injected here -->
             </div>
 
-            <div class="view-post-tags" id="post-tags">
+            <div class="view-post-tags" id="post-tags" style="margin-bottom: 1.5rem;">
               <!-- Post tags will be injected here -->
             </div>
 
-            <div class="view-post-actions">
-              <!-- Delete button only for owner -->
-              <button id="delete-post" style="display: none;">DELETE POST</button>
+            <div class="view-post-actions" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="/feed/bleedstream" class="button">BACK TO BLEEDSTREAM</a>
+              <button id="delete-post" class="button" style="display: none; background: var(--bg-inset); border-color: var(--terminal-red); color: var(--terminal-red);">DELETE POST</button>
             </div>
 
             <div id="message" style="color: var(--terminal-green); margin-top: 1rem;"></div>
@@ -104,68 +125,56 @@
   </div>
 
   <script>
-    // Inject data from server
-    let data, post, profile, user, isOwner;
+    let data, post, user, isOwner;
     try {
-      data = JSON.parse('__DATA__'.replace(/\\n/g, "\\n")
-        .replace(/\\'/g, "\\'")
-        .replace(/\\"/g, '\\"')
-        .replace(/\\&/g, "\\&")
-        .replace(/\\r/g, "\\r")
-        .replace(/\\t/g, "\\t")
-        .replace(/\\b/g, "\\b")
-        .replace(/\\f/g, "\\f"));
-      post = data.post;
-      profile = data.profile;
+      data = __DATA__;
+      post = data.post || {};
       user = data.user;
-      isOwner = data.isOwner;
-      console.log("Post data loaded successfully:", { hasPost: !!post });
+      isOwner = data.isOwner || false;
     } catch (err) {
-      console.error("Error parsing injected data:", err);
-      // Set default values
+      console.error('Error accessing __DATA__:', err);
       data = {};
       post = {};
-      profile = {};
       user = null;
       isOwner = false;
     }
 
-    // Update user status in header
+    // Update user status
     const userStatusEl = document.getElementById('user-status');
     if (user) {
       userStatusEl.innerHTML = `
         <div class="logged-in">
           <span class="username">${user.username}</span>
           <div class="user-links">
-            <a href="/profile">PROFILE</a>
-            <a href="/auth/logout">LOGOUT</a>
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
         </div>
       `;
     } else {
       userStatusEl.innerHTML = `
         <div class="logged-out">
-          <a href="/auth/login" class="login-btn">LOGIN</a>
-          <a href="/auth/register" class="register-btn">REGISTER</a>
+          <a href="/auth/login" class="button">LOGIN</a>
+          <a href="/auth/register" class="button">REGISTER</a>
         </div>
       `;
     }
 
     // Display post details
-    document.getElementById('post-title').textContent = post.title;
+    document.getElementById('post-title').textContent = post.title || 'Untitled Post';
 
     const postAuthorLink = document.getElementById('post-author-link');
-    postAuthorLink.textContent = post.username;
-    postAuthorLink.href = `/profile/user/${post.username}`;
+    postAuthorLink.textContent = post.username || 'Anonymous';
+    postAuthorLink.href = `/profile/user/${post.username || ''}`;
 
-    document.getElementById('post-date').textContent = new Date(post.created_at).toLocaleString();
-    document.getElementById('post-body').textContent = post.content;
+    document.getElementById('post-date').textContent = post.created_at ? new Date(post.created_at).toLocaleString() : 'Unknown date';
+    document.getElementById('post-body').textContent = post.content || 'No content available';
 
     if (post.is_encrypted) {
       document.getElementById('post-encrypted').style.display = 'inline';
     }
 
-    // Display post glyph if it exists
+    // Display post glyph if exists
     const postGlyphEl = document.getElementById('post-glyph');
     if (post.glyph_svg) {
       postGlyphEl.innerHTML = post.glyph_svg;
@@ -175,24 +184,28 @@
     // Display post tags
     const postTagsEl = document.getElementById('post-tags');
     if (post.tags) {
-      post.tags.split(',').forEach(tag => {
-        const tagSpan = document.createElement('span');
-        tagSpan.className = 'view-post-tag';
-        tagSpan.textContent = tag.trim().toUpperCase();
-        postTagsEl.appendChild(tagSpan);
-      });
+      const tagsArray = post.tags.split(',').filter(t => t.trim());
+      if (tagsArray.length > 0) {
+        postTagsEl.innerHTML = '<strong style="color: var(--terminal-green); margin-right: 0.5rem;">TAGS:</strong>';
+        tagsArray.forEach(tag => {
+          const tagLink = document.createElement('a');
+          tagLink.href = `/feed/bleedstream?tag=${encodeURIComponent(tag.trim())}`;
+          tagLink.style.cssText = 'display: inline-block; padding: 0.3rem 0.6rem; margin: 0.2rem; background: var(--bg-inset); border: 1px solid var(--terminal-green); color: var(--terminal-green); text-decoration: none; font-size: 0.85rem;';
+          tagLink.textContent = tag.trim().toUpperCase();
+          postTagsEl.appendChild(tagLink);
+        });
+      }
     } else {
-      postTagsEl.innerHTML = '<span>NO TAGS</span>';
+      postTagsEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO TAGS</span>';
     }
 
     // Show delete button if owner
-    const deletePostBtn = document.getElementById('delete-post');
     if (isOwner) {
-      deletePostBtn.style.display = 'inline-block';
+      document.getElementById('delete-post').style.display = 'inline-block';
     }
 
     // Handle delete post
-    deletePostBtn.addEventListener('click', async () => {
+    document.getElementById('delete-post').addEventListener('click', async () => {
       if (confirm('ARE YOU SURE YOU WANT TO ERASE THIS POST FROM THE BLEEDSTREAM?')) {
         const messageEl = document.getElementById('message');
         const errorMessageEl = document.getElementById('error-message');
@@ -208,12 +221,11 @@
 
           if (data.success) {
             messageEl.textContent = data.message;
-            // Redirect to bleedstream after deletion
             setTimeout(() => {
               window.location.href = '/feed/bleedstream';
-            }, 1000);
+            }, 1500);
           } else {
-            errorMessageEl.textContent = data.message || 'Failed to delete post. Unknown error.';
+            errorMessageEl.textContent = data.message || 'Failed to delete post.';
           }
         } catch (error) {
           console.error('Post delete error:', error);
@@ -222,11 +234,18 @@
       }
     });
 
-    // Toggle glitch effects
+    // Toggle glitch
     document.getElementById('toggle-glitch').addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
     });
+
+    if (localStorage.getItem('glitch-active') === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+
+    console.log('Post view initialized');
   </script>
 </body>
 </html>

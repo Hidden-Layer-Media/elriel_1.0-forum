@@ -4,172 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ACTIVITY LOG | ELRIEL</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/glitch.css">
-  <link rel="stylesheet" href="/css/profile.css">
-  <script src="/js/glitch.js" defer></script>
-  <style>
-    /* Activity Log Styles */
-    .activity-log-panel {
-      margin-bottom: 2rem;
-    }
-    
-    .activity-log-content {
-      padding: 1rem;
-    }
-    
-    .activity-filter {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    
-    .filter-btn {
-      padding: 0.5rem 1rem;
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--terminal-dim-green);
-      color: var(--terminal-text);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .filter-btn:hover, .filter-btn.active {
-      background-color: rgba(0, 255, 0, 0.2);
-      border-color: var(--terminal-green);
-    }
-    
-    .activity-timeline {
-      position: relative;
-      padding-left: 2rem;
-      margin-top: 2rem;
-    }
-    
-    .activity-timeline::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0.5rem;
-      width: 2px;
-      background-color: var(--terminal-dim-green);
-    }
-    
-    .activity-item {
-      position: relative;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px dashed rgba(0, 255, 0, 0.2);
-    }
-    
-    .activity-item::before {
-      content: '';
-      position: absolute;
-      top: 0.5rem;
-      left: -2rem;
-      width: 1rem;
-      height: 1rem;
-      border-radius: 50%;
-      background-color: var(--terminal-green);
-      box-shadow: 0 0 10px var(--glow-color);
-    }
-    
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-    
-    .activity-date {
-      font-family: var(--header-font);
-      color: var(--terminal-dim-green);
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .activity-title {
-      font-family: var(--header-font);
-      color: var(--terminal-green);
-      font-size: 1.1rem;
-      margin: 0 0 0.5rem 0;
-    }
-    
-    .activity-description {
-      color: var(--terminal-text);
-      margin-bottom: 0.5rem;
-    }
-    
-    .activity-meta {
-      display: flex;
-      gap: 1rem;
-      font-size: 0.8rem;
-      color: var(--terminal-dim);
-    }
-    
-    .activity-type {
-      padding: 0.2rem 0.5rem;
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 3px;
-    }
-    
-    .activity-type-profile {
-      border-left: 3px solid #00ff00;
-    }
-    
-    .activity-type-post {
-      border-left: 3px solid #ff9900;
-    }
-    
-    .activity-type-glyph {
-      border-left: 3px solid #00ffff;
-    }
-    
-    .activity-type-forum {
-      border-left: 3px solid #ff00ff;
-    }
-    
-    .activity-type-system {
-      border-left: 3px solid #ffffff;
-    }
-    
-    .activity-pagination {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 2rem;
-    }
-    
-    .pagination-btn {
-      padding: 0.5rem 1rem;
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--terminal-dim-green);
-      color: var(--terminal-text);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .pagination-btn:hover, .pagination-btn.active {
-      background-color: rgba(0, 255, 0, 0.2);
-      border-color: var(--terminal-green);
-    }
-    
-    .pagination-btn.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    .pagination-btn.disabled:hover {
-      background-color: rgba(0, 0, 0, 0.5);
-      border-color: var(--terminal-dim-green);
-    }
-  </style>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
+  <link rel="stylesheet" href="/css/activity.css">
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
+  <script src="/js/performance-fixes.js" defer></script>
 </head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -179,7 +43,10 @@
     </header>
 
     <div class="content-wrapper">
-      <nav class="sidebar">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
+      <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
           <ul class="nav-links">
@@ -187,7 +54,7 @@
             <li><a href="/feed/bleedstream">BLEEDSTREAM</a></li>
             <li><a href="/glyph/crucible">GLYPH CRUCIBLE</a></li>
             <li><a href="/whisper/board">WHISPERBOARD</a></li>
-            <li><a href="/forum">FORUMS</a></li>
+            <li><a href="/forum/scrapyard">SCRAPYARD</a></li>
           </ul>
         </div>
         <div class="nav-section">
@@ -195,7 +62,6 @@
           <ul class="nav-links">
             <li><a href="/profile">DASHBOARD</a></li>
             <li><a href="/profile/edit">EDIT PROFILE</a></li>
-            <li><a href="/profile/enhanced">ENHANCED VIEW</a></li>
             <li><a href="/profile/activity" class="active">ACTIVITY LOG</a></li>
           </ul>
         </div>
@@ -209,26 +75,27 @@
       </nav>
 
       <main class="main-content">
-        <section class="activity-log-panel panel">
+        <section class="panel activity-log-panel">
+          <div class="scanner-line"></div>
           <div class="panel-header">
             <h2>ACTIVITY LOG: <span id="activity-username"></span></h2>
             <div class="status-indicator">ARCHIVE</div>
           </div>
-          <div class="activity-log-content">
-            <div class="activity-filter">
-              <button class="filter-btn active" data-filter="all">ALL ACTIVITY</button>
-              <button class="filter-btn" data-filter="profile">PROFILE</button>
-              <button class="filter-btn" data-filter="post">POSTS</button>
-              <button class="filter-btn" data-filter="glyph">GLYPHS</button>
-              <button class="filter-btn" data-filter="forum">FORUM</button>
-              <button class="filter-btn" data-filter="system">SYSTEM</button>
+          <div class="panel-content">
+            <div class="activity-filter" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+              <button class="button filter-btn active" data-filter="all">ALL</button>
+              <button class="button filter-btn" data-filter="profile">PROFILE</button>
+              <button class="button filter-btn" data-filter="post">POSTS</button>
+              <button class="button filter-btn" data-filter="glyph">GLYPHS</button>
+              <button class="button filter-btn" data-filter="forum">FORUM</button>
+              <button class="button filter-btn" data-filter="system">SYSTEM</button>
             </div>
             
-            <div class="activity-timeline" id="activity-timeline">
+            <div class="activity-timeline" id="activity-timeline" style="position: relative; padding-left: 2rem;">
               <!-- Activity items will be injected here -->
             </div>
             
-            <div class="activity-pagination" id="activity-pagination">
+            <div class="activity-pagination" id="activity-pagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap;">
               <!-- Pagination will be injected here -->
             </div>
           </div>
@@ -247,128 +114,108 @@
   </div>
 
   <script>
-    // Inject data from server
-  const data = __DATA__;
+    const data = __DATA__;
     const user = data.user;
     const activities = data.activities || [];
     const totalPages = data.totalPages || 1;
     const currentPage = data.currentPage || 1;
     const username = data.username || (user ? user.username : 'UNKNOWN');
     
-    // Update user status in header
+    // Update user status
     const userStatusEl = document.getElementById('user-status');
     if (user) {
       userStatusEl.innerHTML = `
         <div class="logged-in">
           <span class="username">${user.username}</span>
           <div class="user-links">
-            <a href="/profile">PROFILE</a>
-            <a href="/auth/logout">LOGOUT</a>
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
         </div>
       `;
     } else {
       userStatusEl.innerHTML = `
         <div class="logged-out">
-          <a href="/auth/login" class="login-btn">LOGIN</a>
-          <a href="/auth/register" class="register-btn">REGISTER</a>
+          <a href="/auth/login" class="button">LOGIN</a>
+          <a href="/auth/register" class="button">REGISTER</a>
         </div>
       `;
     }
     
-    // Set username in header
     document.getElementById('activity-username').textContent = username;
     
-    // Render activity items
-    const activityTimelineEl = document.getElementById('activity-timeline');
-    
+    // Render activities
+    const timelineEl = document.getElementById('activity-timeline');
     if (activities.length > 0) {
       activities.forEach(activity => {
-        const activityEl = document.createElement('div');
-        activityEl.className = `activity-item activity-type-${activity.activity_type}`;
-        activityEl.setAttribute('data-type', activity.activity_type);
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'activity-item';
+        itemDiv.setAttribute('data-type', activity.activity_type || 'system');
+        itemDiv.style.cssText = 'position: relative; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed var(--terminal-dim-green);';
         
-        const activityDate = new Date(activity.created_at).toLocaleString();
+        const typeClass = (activity.activity_type || 'system').split('_')[0];
         
-        activityEl.innerHTML = `
-          <div class="activity-date">${activityDate}</div>
-          <h3 class="activity-title">${activity.title || 'Activity Recorded'}</h3>
-          <div class="activity-description">${activity.description}</div>
-          <div class="activity-meta">
-            <span class="activity-type activity-type-${activity.activity_type}">${formatActivityType(activity.activity_type)}</span>
-            ${activity.location ? `<span class="activity-location">${activity.location}</span>` : ''}
-          </div>
+        itemDiv.innerHTML = `
+          <div style="font-size: 0.8rem; color: var(--terminal-dim-green); margin-bottom: 0.5rem;">${new Date(activity.created_at).toLocaleString()}</div>
+          <h3 style="color: var(--terminal-green); font-size: 1.1rem; margin: 0 0 0.5rem 0;">${activity.activity_type ? activity.activity_type.replace(/_/g, ' ').toUpperCase() : 'ACTIVITY'}</h3>
+          <div style="color: var(--text-primary); margin-bottom: 0.5rem;">${activity.description || 'No description'}</div>
+          <div style="display: inline-block; padding: 0.2rem 0.5rem; background: var(--bg-inset); border-left: 3px solid var(--terminal-green); font-size: 0.8rem;">${typeClass.toUpperCase()}</div>
         `;
         
-        activityTimelineEl.appendChild(activityEl);
+        // Add dot marker
+        const dot = document.createElement('div');
+        dot.style.cssText = 'position: absolute; top: 0.5rem; left: -2rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: var(--terminal-green); box-shadow: var(--glow-medium);';
+        itemDiv.appendChild(dot);
+        
+        timelineEl.appendChild(itemDiv);
       });
     } else {
-      activityTimelineEl.innerHTML = '<div class="no-activity">No activity recorded yet.</div>';
+      timelineEl.innerHTML = '<div style="color: var(--terminal-dim-green); text-align: center; padding: 2rem;">NO ACTIVITY RECORDED</div>';
     }
     
-    // Format activity type for display
-    function formatActivityType(type) {
-      const typeMap = {
-        'profile_updated': 'PROFILE',
-        'post_created': 'POST',
-        'post_commented': 'POST',
-        'glyph_created': 'GLYPH',
-        'forum_post': 'FORUM',
-        'forum_reply': 'FORUM',
-        'login': 'SYSTEM',
-        'signup': 'SYSTEM'
-      };
-      
-      return typeMap[type] || 'SYSTEM';
+    // Timeline line
+    if (activities.length > 0) {
+      const timeline = document.createElement('div');
+      timeline.style.cssText = 'position: absolute; top: 0; bottom: 0; left: 0.5rem; width: 2px; background-color: var(--terminal-dim-green);';
+      timelineEl.insertBefore(timeline, timelineEl.firstChild);
     }
     
-    // Render pagination
+    // Pagination
     const paginationEl = document.getElementById('activity-pagination');
-    
     if (totalPages > 1) {
-      // Previous button
       const prevBtn = document.createElement('a');
-      prevBtn.className = `pagination-btn ${currentPage === 1 ? 'disabled' : ''}`;
+      prevBtn.className = `button pagination-btn ${currentPage === 1 ? 'disabled' : ''}`;
       prevBtn.textContent = 'PREVIOUS';
       prevBtn.href = currentPage > 1 ? `/profile/activity?page=${currentPage - 1}` : '#';
-      if (currentPage === 1) {
-        prevBtn.addEventListener('click', e => e.preventDefault());
-      }
+      if (currentPage === 1) prevBtn.addEventListener('click', e => e.preventDefault());
       paginationEl.appendChild(prevBtn);
       
-      // Page numbers
       for (let i = 1; i <= totalPages; i++) {
         const pageBtn = document.createElement('a');
-        pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+        pageBtn.className = `button pagination-btn ${i === currentPage ? 'active' : ''}`;
         pageBtn.textContent = i;
         pageBtn.href = `/profile/activity?page=${i}`;
         paginationEl.appendChild(pageBtn);
       }
       
-      // Next button
       const nextBtn = document.createElement('a');
-      nextBtn.className = `pagination-btn ${currentPage === totalPages ? 'disabled' : ''}`;
+      nextBtn.className = `button pagination-btn ${currentPage === totalPages ? 'disabled' : ''}`;
       nextBtn.textContent = 'NEXT';
       nextBtn.href = currentPage < totalPages ? `/profile/activity?page=${currentPage + 1}` : '#';
-      if (currentPage === totalPages) {
-        nextBtn.addEventListener('click', e => e.preventDefault());
-      }
+      if (currentPage === totalPages) nextBtn.addEventListener('click', e => e.preventDefault());
       paginationEl.appendChild(nextBtn);
     }
     
     // Activity filtering
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', function() {
-        // Remove active class from all buttons
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        // Add active class to clicked button
         this.classList.add('active');
         
         const filter = this.getAttribute('data-filter');
-        
-        // Show/hide activity items based on filter
         document.querySelectorAll('.activity-item').forEach(item => {
-          if (filter === 'all' || item.getAttribute('data-type').includes(filter)) {
+          const itemType = item.getAttribute('data-type') || '';
+          if (filter === 'all' || itemType.includes(filter)) {
             item.style.display = 'block';
           } else {
             item.style.display = 'none';
@@ -377,11 +224,18 @@
       });
     });
     
-    // Toggle glitch effects
+    // Toggle glitch
     document.getElementById('toggle-glitch').addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
     });
+
+    if (localStorage.getItem('glitch-active') === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+
+    console.log('Activity log page initialized');
   </script>
 </body>
 </html>

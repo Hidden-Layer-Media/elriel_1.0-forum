@@ -4,95 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>REGISTER | ELRIEL</title>
-  <link rel="stylesheet" href="/css/win98.css">
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
-  <script src="/js/glitch.js" defer></script>
-  <style>
-    .auth-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
-    .auth-panel { background-color: var(--win98-bg); border-width: 2px; border-style: solid; border-color: var(--win98-border-light) var(--win98-border-darker) var(--win98-border-darker) var(--win98-border-light); width: 100%; max-width: 400px; text-align: center; }
-    .auth-titlebar { background-color: var(--win98-title-bg); color: var(--win98-title-text); padding: 2px 3px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: bold; }
-    .auth-window-controls { display: flex; }
-    .auth-window-control { width: 16px; height: 14px; margin-left: 2px; background-color: var(--win98-button-face); border-width: 1px; border-style: solid; border-color: var(--win98-border-light) var(--win98-border-darker) var(--win98-border-darker) var(--win98-border-light); font-size: 9px; line-height: 12px; text-align: center; color: black; }
-    .auth-content { padding: 16px; background-color: var(--win98-window-bg); border-top: 1px solid var(--win98-border-dark); }
-    .form-group { margin-bottom: 16px; text-align: left; }
-    .form-group label { display: block; margin-bottom: 4px; color: var(--win98-text); font-size: 11px; }
-    .form-group input { width: 100%; padding: 4px; background-color: white; border-width: 2px; border-style: solid; border-color: var(--win98-border-darker) var(--win98-border-light) var(--win98-border-light) var(--win98-border-darker); color: var(--win98-text); font-family: 'MS Sans Serif', sans-serif; font-size: 11px; }
-    .form-group input:focus { outline: 1px dotted black; }
-    .auth-button { display: inline-block; padding: 4px 8px; background-color: var(--win98-button-face); color: var(--win98-text); border-width: 2px; border-style: solid; border-color: var(--win98-border-light) var(--win98-border-darker) var(--win98-border-darker) var(--win98-border-light); box-shadow: 1px 1px 0px var(--win98-border-dark); font-family: 'MS Sans Serif', sans-serif; font-size: 11px; text-decoration: none; margin: 4px; min-width: 75px; text-align: center; cursor: pointer; }
-    .auth-button:active { border-color: var(--win98-border-darker) var(--win98-border-light) var(--win98-border-light) var(--win98-border-darker); box-shadow: 1px 1px 0px rgba(0,0,0,0.1) inset; }
-    .switch-auth { margin-top: 16px; font-size: 11px; }
-    .switch-auth a { color: var(--win98-link); text-decoration: none; }
-    .switch-auth a:hover { text-decoration: underline; }
-    .error-message { color: red; margin-top: 8px; font-size: 11px; font-family: 'MS Sans Serif', sans-serif; }
-
-    .sidebar-toggle-icon {
-      font-size: 20px;
-      color: var(--terminal-green, #8a2be2);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar-toggle-icon:hover {
-      background-color: rgba(138, 43, 226, 0.2);
-      box-shadow: 0 0 10px var(--glow-color, rgba(138, 43, 226, 0.5));
-    }
-
-    @media (max-width: 768px) {
-      .sidebar-toggle-icon {
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        z-index: 1100;
-        background-color: rgba(0,0,0,0.8);
-        border: 1px solid var(--terminal-green);
-      }
-      .sidebar-toggle-icon:hover {
-        background-color: var(--terminal-green);
-        color: var(--terminal-bg);
-      }
-      .container { padding: 0 2vw; }
-      .main-header h1 { font-size: 2rem; }
-      .main-content { padding: 1vw 0; }
-    }
-  </style>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
 </head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
-      </div>
-      <div class="user-panel">
-        <div id="user-status">
-          <!-- User status will be injected here -->
-        </div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
     </header>
 
     <div class="content-wrapper">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
       <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
@@ -105,57 +49,47 @@
           </ul>
         </div>
         <div class="nav-section">
-          <h3 class="nav-title">PROFILE</h3>
-          <ul class="nav-links">
-            <li><a href="/profile">DASHBOARD</a></li>
-            <li><a href="/profile/edit">EDIT PROFILE</a></li>
-            <li><a href="/feed/new">CREATE POST</a></li>
-          </ul>
-        </div>
-        <div class="nav-section">
           <h3 class="nav-title">SYSTEM</h3>
           <ul class="nav-links">
             <li><a href="/about">ABOUT</a></li>
             <li><a href="#" id="toggle-glitch">TOGGLE GLITCH</a></li>
           </ul>
         </div>
-        <button type="button" class="mobile-nav-toggle sidebar-toggle-icon" id="mobile-nav-toggle" aria-label="Toggle navigation">></button>
       </nav>
 
-      <main class="main-content">
-        <section class="auth-panel">
-          <div class="auth-titlebar">
-            <div class="win98-titlebar-text">REGISTER NEW USER</div>
-            <div class="auth-window-controls">
-              <div class="auth-window-control">_</div>
-              <div class="auth-window-control">&#x25a1;</div>
-              <div class="auth-window-control">&#xd7;</div>
-            </div>
+      <main class="main-content" style="display: flex; align-items: center; justify-content: center;">
+        <section class="panel auth-panel" style="max-width: 500px; width: 100%;">
+          <div class="scanner-line"></div>
+          <div class="panel-header">
+            <h2>REGISTER NEW USER</h2>
+            <div class="status-indicator">IDENTITY</div>
           </div>
-          <div class="auth-content">
+          <div class="panel-content">
             <form id="register-form">
               <div class="form-group">
                 <label for="username">USERNAME:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" required placeholder="Choose username" autocomplete="username" maxlength="30">
               </div>
               <div class="form-group">
                 <label for="email">EMAIL:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required placeholder="Enter email" autocomplete="email">
               </div>
               <div class="form-group">
                 <label for="password">PASSWORD:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required placeholder="Enter password" autocomplete="new-password" minlength="6">
               </div>
               <div class="form-group">
                 <label for="confirm-password">CONFIRM PASSWORD:</label>
-                <input type="password" id="confirm-password" name="confirmPassword" required>
+                <input type="password" id="confirm-password" name="confirmPassword" required placeholder="Confirm password" autocomplete="new-password" minlength="6">
               </div>
-              <button type="submit" class="auth-button">REGISTER IDENTITY</button>
+              <div class="form-actions" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="button auth-button">REGISTER IDENTITY</button>
+                <div class="switch-auth" style="text-align: center; font-size: 0.9rem; color: var(--terminal-dim-green);">
+                  ALREADY REGISTERED? <a href="/auth/login" style="color: var(--terminal-green);">ACCESS TERMINAL</a>
+                </div>
+              </div>
             </form>
-            <div class="switch-auth">
-              ALREADY REGISTERED? <a href="/auth/login">ACCESS TERMINAL</a>
-            </div>
-            <div id="error-message" class="error-message"></div>
+            <div id="error-message" style="color: var(--terminal-red); margin-top: 1rem; text-align: center;"></div>
           </div>
         </section>
       </main>
@@ -164,81 +98,68 @@
     <footer class="main-footer">
       <div class="footer-text">ELRIEL NETWORK // ESTABLISHED 2025 // ALL RIGHTS SURRENDERED</div>
       <div class="footer-glyphs">
-        <span class="glyph">&#x2318;</span>
-        <span class="glyph">&#x235f;</span>
-        <span class="glyph">&#x2394;</span>
+        <span class="glyph">⌘</span>
+        <span class="glyph">⍟</span>
+        <span class="glyph">⎔</span>
       </div>
     </footer>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Inject data from server
+    // Handle registration
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const errorMessageEl = document.getElementById('error-message');
+      errorMessageEl.textContent = '';
+      
+      // Client-side validation
+      if (password !== confirmPassword) {
+        errorMessageEl.textContent = 'PASSWORDS DO NOT MATCH.';
+        return;
+      }
+      
+      if (password.length < 6) {
+        errorMessageEl.textContent = 'PASSWORD MUST BE AT LEAST 6 CHARACTERS.';
+        return;
+      }
+      
       try {
-        const data = __DATA__;
-        const userStatusEl = document.getElementById('user-status');
-        if (data && data.user) {
-          userStatusEl.innerHTML = `
-            <div class="logged-in">
-              <span class="username">${data.user.username}</span>
-              <div class="user-links">
-                <a href="/profile">PROFILE</a>
-                <a href="/auth/logout">LOGOUT</a>
-              </div>
-            </div>
-          `;
-        } else {
-          userStatusEl.innerHTML = `
-            <div class="logged-out">
-              <a href="/auth/login" class="login-btn">LOGIN</a>
-              <a href="/auth/register" class="register-btn">REGISTER</a>
-            </div>
-          `;
-        }
-      } catch (err) {}
-
-      document.getElementById('register-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-        const errorMessageEl = document.getElementById('error-message');
-        if (password !== confirmPassword) {
-          errorMessageEl.textContent = 'Passwords do not match.';
-          return;
-        }
-        try {
-          const response = await fetch('/auth/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, email, password, confirmPassword })
-          });
-          const data = await response.json();
-          if (data.success) {
-            window.location.href = '/profile';
-          } else {
-            errorMessageEl.textContent = data.message || 'Registration failed. Unknown error.';
-          }
-        } catch (error) {
-          errorMessageEl.textContent = 'System error. Could not connect to registration server.';
-        }
-      });
-      // Toggle glitch effects
-      document.getElementById('toggle-glitch').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.body.classList.toggle('glitch-active');
-      });
-      // Hide sidebar on nav link click (mobile)
-      document.querySelectorAll('.sidebar .nav-links a').forEach(function(link) {
-        link.addEventListener('click', function() {
-          document.getElementById('main-sidebar').classList.remove('active');
+        const response = await fetch('/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password, confirmPassword })
         });
-      });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          window.location.href = '/profile';
+        } else {
+          errorMessageEl.textContent = data.message || 'REGISTRATION FAILED. IDENTITY CONFLICT.';
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        errorMessageEl.textContent = 'SYSTEM ERROR. COULD NOT CONNECT TO REGISTRATION SERVER.';
+      }
     });
+    
+    // Toggle glitch
+    document.getElementById('toggle-glitch').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
+    });
+
+    if (localStorage.getItem('glitch-active') === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+
+    console.log('Register page initialized');
   </script>
-  <script defer src="/js/sidebar-manager.js"></script>
 </body>
 </html>

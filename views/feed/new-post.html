@@ -4,19 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NEW POST | ELRIEL</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/glitch.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
   <link rel="stylesheet" href="/css/feed.css">
-  <script src="/js/glitch.js" defer></script>
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
+  <script src="/js/performance-fixes.js" defer></script>
 </head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -26,7 +43,10 @@
     </header>
 
     <div class="content-wrapper">
-      <nav class="sidebar">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
+      <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
           <ul class="nav-links">
@@ -55,47 +75,52 @@
       </nav>
 
       <main class="main-content">
-        <section class="new-post-panel">
+        <section class="panel new-post-panel">
+          <div class="scanner-line"></div>
           <div class="panel-header">
             <h2>CREATE NEW POST</h2>
             <div class="status-indicator">TRANSMIT</div>
           </div>
-          <div class="new-post-content">
+          <div class="panel-content">
             <form id="new-post-form">
               <div class="form-group">
                 <label for="title">TITLE:</label>
-                <input type="text" id="title" name="title" required>
+                <input type="text" id="title" name="title" required maxlength="200" placeholder="Enter post title...">
               </div>
               
               <div class="form-group">
                 <label for="content">CONTENT:</label>
-                <textarea id="content" name="content" required></textarea>
+                <textarea id="content" name="content" required rows="10" maxlength="10000" placeholder="Enter post content..."></textarea>
               </div>
               
               <div class="form-group">
                 <label for="tags">TAGS (COMMA SEPARATED):</label>
-                <input type="text" id="tags" name="tags">
+                <input type="text" id="tags" name="tags" placeholder="e.g., cyberpunk, glitch, terminal">
+                <p class="help-text" style="font-size: 0.85rem; color: var(--terminal-dim-green); margin-top: 0.5rem;">Separate tags with commas for better organization</p>
               </div>
               
               <div class="form-group">
                 <label>ATTACH SIGIL (OPTIONAL):</label>
-                <div class="glyph-selection" id="glyph-selection">
+                <div class="glyph-selection" id="glyph-selection" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
                   <!-- User's glyphs will be injected here -->
                 </div>
                 <input type="hidden" id="selected-glyph-id" name="glyphId">
               </div>
               
-              <div class="form-group">
+              <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
                 <input type="checkbox" id="is-encrypted" name="isEncrypted" value="1">
-                <label for="is-encrypted">ENCRYPT POST?</label>
+                <label for="is-encrypted" style="margin: 0;">ENCRYPT POST?</label>
               </div>
               
-              <button type="submit">TRANSMIT TO BLEEDSTREAM</button>
+              <div class="form-actions" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="button submit-btn">TRANSMIT TO BLEEDSTREAM</button>
+                <a href="/feed/bleedstream" class="button cancel-btn">CANCEL</a>
+              </div>
             </form>
             
             <div id="message" style="color: var(--terminal-green); margin-top: 1rem;"></div>
             <div id="error-message" style="color: var(--terminal-red); margin-top: 1rem;"></div>
-            <div id="encryption-key-message" style="color: var(--terminal-blue); margin-top: 1rem;"></div>
+            <div id="encryption-key-message" style="color: var(--terminal-blue); margin-top: 1rem; padding: 1rem; background: var(--bg-inset); border: 2px solid var(--terminal-blue); display: none;"></div>
           </div>
         </section>
       </main>
@@ -112,73 +137,63 @@
   </div>
 
   <script>
-    // Inject data from server
     let data, user, glyphs;
     try {
-      data = JSON.parse('__DATA__'.replace(/\\n/g, "\\n")
-        .replace(/\\'/g, "\\'")
-        .replace(/\\"/g, '\\"')
-        .replace(/\\&/g, "\\&")
-        .replace(/\\r/g, "\\r")
-        .replace(/\\t/g, "\\t")
-        .replace(/\\b/g, "\\b")
-        .replace(/\\f/g, "\\f"));
+      data = __DATA__;
       user = data.user;
       glyphs = data.glyphs || [];
-      console.log("Post data loaded successfully:", { hasUser: !!user, glyphCount: glyphs.length });
     } catch (err) {
-      console.error("Error parsing injected data:", err);
-      // Set default values
+      console.error('Error accessing __DATA__:', err);
       data = {};
       user = null;
       glyphs = [];
     }
     
-    // Update user status in header
+    // Update user status
     const userStatusEl = document.getElementById('user-status');
     if (user) {
       userStatusEl.innerHTML = `
         <div class="logged-in">
           <span class="username">${user.username}</span>
           <div class="user-links">
-            <a href="/profile">PROFILE</a>
-            <a href="/auth/logout">LOGOUT</a>
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
         </div>
       `;
     } else {
       userStatusEl.innerHTML = `
         <div class="logged-out">
-          <a href="/auth/login" class="login-btn">LOGIN</a>
-          <a href="/auth/register" class="register-btn">REGISTER</a>
+          <a href="/auth/login" class="button">LOGIN</a>
+          <a href="/auth/register" class="button">REGISTER</a>
         </div>
       `;
     }
     
-    // Display user's glyphs for selection
+    // Display glyphs for selection
     const glyphSelectionEl = document.getElementById('glyph-selection');
     if (glyphs && glyphs.length > 0) {
       glyphs.forEach(glyph => {
         const glyphItem = document.createElement('div');
         glyphItem.className = 'glyph-item';
+        glyphItem.style.cssText = 'width: 60px; height: 60px; border: 2px solid var(--terminal-dim-green); padding: 0.5rem; cursor: pointer; transition: all 0.3s ease; background: var(--bg-inset);';
         glyphItem.innerHTML = glyph.svg_data;
         glyphItem.setAttribute('data-glyph-id', glyph.id);
-        glyphItem.title = `Generated: ${new Date(glyph.created_at).toLocaleString()}`;
         
-        // Add click event listener for selection
         glyphItem.addEventListener('click', () => {
-          // Remove selected class from all glyphs
-          document.querySelectorAll('.glyph-item').forEach(item => item.classList.remove('selected'));
-          // Add selected class to the clicked glyph
+          document.querySelectorAll('.glyph-item').forEach(item => {
+            item.style.borderColor = 'var(--terminal-dim-green)';
+            item.classList.remove('selected');
+          });
+          glyphItem.style.borderColor = 'var(--terminal-green)';
           glyphItem.classList.add('selected');
-          // Set the hidden input value
           document.getElementById('selected-glyph-id').value = glyph.id;
         });
         
         glyphSelectionEl.appendChild(glyphItem);
       });
     } else {
-      glyphSelectionEl.innerHTML = '<span>NO SAVED SIGILS. VISIT THE GLYPH CRUCIBLE TO GENERATE SOME.</span>';
+      glyphSelectionEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO SAVED SIGILS. <a href="/glyph/crucible" style="color: var(--terminal-green);">VISIT GLYPH CRUCIBLE</a> TO GENERATE SOME.</span>';
     }
     
     // Handle form submission
@@ -196,7 +211,7 @@
       const encryptionKeyMessageEl = document.getElementById('encryption-key-message');
       messageEl.textContent = '';
       errorMessageEl.textContent = '';
-      encryptionKeyMessageEl.textContent = '';
+      encryptionKeyMessageEl.style.display = 'none';
       
       try {
         const response = await fetch('/feed/create', {
@@ -212,14 +227,16 @@
         if (data.success) {
           messageEl.textContent = data.message;
           if (data.encryptionKey) {
-            encryptionKeyMessageEl.textContent = `ENCRYPTION KEY: ${data.encryptionKey}`;
+            encryptionKeyMessageEl.innerHTML = `<strong>⚠️ SAVE THIS ENCRYPTION KEY:</strong><br><code style="font-size: 1.1rem; color: var(--terminal-blue);">${data.encryptionKey}</code><br><small>You will need this key to decrypt your post!</small>`;
+            encryptionKeyMessageEl.style.display = 'block';
           }
-          // Optionally redirect after successful post
-          // setTimeout(() => {
-          //   window.location.href = '/feed/bleedstream';
-          // }, 2000);
+          
+          // Redirect after 3 seconds
+          setTimeout(() => {
+            window.location.href = '/feed/bleedstream';
+          }, 3000);
         } else {
-          errorMessageEl.textContent = data.message || 'Post creation failed. Unknown error.';
+          errorMessageEl.textContent = data.message || 'Post creation failed.';
         }
       } catch (error) {
         console.error('Post creation error:', error);
@@ -227,11 +244,18 @@
       }
     });
     
-    // Toggle glitch effects
+    // Toggle glitch
     document.getElementById('toggle-glitch').addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
     });
+
+    if (localStorage.getItem('glitch-active') === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+
+    console.log('New post page initialized');
   </script>
 </body>
 </html>

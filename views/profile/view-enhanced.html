@@ -3,440 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PROFILE | ELRIEL</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/glitch.css">
+  <title>ENHANCED PROFILE | ELRIEL</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
   <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
+  <script src="/js/performance-fixes.js" defer></script>
+  <script src="/js/profile-themes.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="/js/glyph3d.js" defer></script>
-  <script src="/js/glitch.js" defer></script>
-  <script src="/js/profile-themes.js" defer></script>
-  <script src="/js/profile-widgets.js" defer></script>
-  <style>
-    /* Enhanced Profile Styles */
-    .light-theme {
-      --bg-color: #0f0f0f;
-      --terminal-bg: #0a0a0a;
-      --terminal-green: #00ff00;
-      --terminal-dim-green: #00aa00;
-      --terminal-blue: #0077ff;
-      --terminal-red: #ff0033;
-      --terminal-purple: #cc00ff;
-      --terminal-text: #cccccc;
-      --terminal-bright: #ffffff;
-      --terminal-dim: #666666;
-      --glow-color: rgba(0, 255, 0, 0.5);
-      --panel-bg: rgba(0, 20, 0, 0.7);
-      --panel-border: 1px solid rgba(0, 255, 0, 0.3);
-      --sidebar-bg: rgba(5, 10, 5, 0.8);
-    }
-
-    /* Profile Header */
-    .profile-view-header {
-      position: relative;
-      height: 250px;
-      margin-bottom: 1rem;
-      overflow: hidden;
-      border: 1px solid rgba(0, 255, 0, 0.2);
-    }
-
-    /* Background options */
-    .profile-bg-single {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      filter: brightness(50%) contrast(150%);
-    }
-
-    .profile-bg-tiled {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-repeat: repeat;
-      filter: brightness(50%) contrast(150%);
-    }
-
-    /* Profile avatar and info section */
-    .profile-info-section {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin: -50px 20px 0 20px;
-      z-index: 10;
-    }
-
-    .profile-view-avatar {
-      flex: 0 0 100px;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background-color: rgba(0, 0, 0, 0.8);
-      border: 3px solid var(--terminal-green);
-      overflow: hidden;
-      margin-right: 20px;
-    }
-
-    .profile-view-info {
-      flex: 1;
-      min-width: 200px;
-      padding: 10px 15px;
-      background-color: rgba(0, 0, 0, 0.8);
-      border: 1px solid var(--terminal-green);
-    }
-
-    /* Sigil display */
-    .profile-sigil-display {
-      flex: 0 0 130px;
-      height: 130px;
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .profile-sigil-wrapper {
-      width: 120px;
-      height: 120px;
-      position: relative;
-    }
-
-    /* Container customization */
-    .profile-containers {
-      margin-top: 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-
-    /* Add header image support */
-    .profile-header-image {
-      width: 100%;
-      height: auto;
-      max-height: 250px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .profile-container {
-      background-color: var(--panel-bg);
-      border: var(--panel-border);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .container-header {
-      padding: 0.8rem 1rem;
-      background-color: rgba(0, 0, 0, 0.3);
-      border-bottom: var(--panel-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .container-title {
-      font-family: var(--header-font);
-      color: var(--terminal-green);
-      font-size: 1.1rem;
-      margin: 0;
-    }
-
-    .container-content {
-      padding: 1rem;
-    }
-
-    /* Container types */
-    .container-image-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 0.5rem;
-    }
-
-    .gallery-image {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      border: 1px solid rgba(0, 255, 0, 0.2);
-      transition: all 0.3s ease;
-    }
-
-    .gallery-image:hover {
-      transform: scale(1.05);
-      border-color: var(--terminal-green);
-    }
-
-    .container-list ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .container-list li {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(0, 255, 0, 0.1);
-    }
-
-    .container-list li:last-child {
-      border-bottom: none;
-    }
-
-    .container-paragraph {
-      line-height: 1.6;
-    }
-
-    .container-iframe {
-      width: 100%;
-      min-height: 250px;
-    }
-
-    /* Repute display */
-    .repute-display {
-      display: flex;
-      align-items: center;
-      margin-top: 0.5rem;
-    }
-
-    .repute-bar {
-      flex: 1;
-      height: 8px;
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--terminal-dim-green);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-right: 10px;
-    }
-
-    .repute-progress {
-      height: 100%;
-      background-color: var(--terminal-green);
-      width: 0%; /* Will be set by JavaScript */
-    }
-
-    .repute-value {
-      font-family: var(--header-font);
-      color: var(--terminal-green);
-      font-size: 0.9rem;
-    }
-
-    /* Rewards section */
-    .rewards-display {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .reward-badge {
-      padding: 0.2rem 0.5rem;
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--terminal-dim-green);
-      border-radius: 3px;
-      font-size: 0.8rem;
-      color: var(--terminal-dim-green);
-    }
-
-    /* Owner-only controls */
-    .profile-controls {
-      margin-top: 1rem;
-      padding: 1rem;
-      background-color: rgba(0, 0, 0, 0.3);
-      border: 1px dashed var(--terminal-dim-green);
-      display: none;
-    }
-
-    .control-buttons {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .control-btn {
-      padding: 0.5rem 1rem;
-      background-color: rgba(0, 255, 0, 0.2);
-      border: 1px solid var(--terminal-dim-green);
-      color: var(--terminal-text);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .control-btn:hover {
-      background-color: rgba(0, 255, 0, 0.3);
-      border-color: var(--terminal-green);
-    }
-
-    /* Activity Log Styles */
-    .profile-activity-log {
-      margin-top: 2rem;
-    }
-
-    .activity-log-content {
-      padding: 1rem;
-    }
-
-    .activity-timeline {
-      position: relative;
-      padding-left: 2rem;
-      margin-top: 1rem;
-    }
-
-    .activity-timeline::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0.5rem;
-      width: 2px;
-      background-color: var(--terminal-dim-green);
-    }
-
-    .activity-item {
-      position: relative;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px dashed rgba(0, 255, 0, 0.2);
-    }
-
-    .activity-item::before {
-      content: '';
-      position: absolute;
-      top: 0.5rem;
-      left: -2rem;
-      width: 1rem;
-      height: 1rem;
-      border-radius: 50%;
-      background-color: var(--terminal-green);
-      box-shadow: 0 0 10px var(--glow-color);
-    }
-
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-
-    .activity-date {
-      font-family: var(--header-font);
-      color: var(--terminal-dim-green);
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .activity-title {
-      font-family: var(--header-font);
-      color: var(--terminal-green);
-      font-size: 1.1rem;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .activity-description {
-      color: var(--terminal-text);
-      margin-bottom: 0.5rem;
-    }
-
-    .activity-meta {
-      display: flex;
-      gap: 1rem;
-      font-size: 0.8rem;
-      color: var(--terminal-dim);
-    }
-
-    .activity-type {
-      padding: 0.2rem 0.5rem;
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 3px;
-    }
-
-    .activity-type-profile {
-      border-left: 3px solid #00ff00;
-    }
-
-    .activity-type-post {
-      border-left: 3px solid #ff9900;
-    }
-
-    .activity-type-glyph {
-      border-left: 3px solid #00ffff;
-    }
-
-    .activity-type-forum {
-      border-left: 3px solid #ff00ff;
-    }
-
-    .activity-type-system {
-      border-left: 3px solid #ffffff;
-    }
-
-    .view-all-activity {
-      margin-top: 1.5rem;
-      text-align: center;
-    }
-
-    .view-all-btn {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background-color: rgba(0, 255, 0, 0.1);
-      border: 1px solid var(--terminal-dim-green);
-      color: var(--terminal-text);
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-
-    .view-all-btn:hover {
-      background-color: rgba(0, 255, 0, 0.2);
-      border-color: var(--terminal-green);
-    }
-
-    /* Container controls */
-    .container-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .container-controls {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .container-edit-btn, .container-delete-btn {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--terminal-dim-green);
-      color: var(--terminal-text);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-      text-decoration: none;
-    }
-
-    .container-edit-btn:hover {
-      background-color: rgba(0, 255, 0, 0.2);
-      border-color: var(--terminal-green);
-      color: var(--terminal-green);
-    }
-
-    .container-delete-btn:hover {
-      background-color: rgba(255, 0, 0, 0.2);
-      border-color: #ff0000;
-      color: #ff0000;
-    }
-  </style>
 </head>
-<body class="terminal light-theme">
+<body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -446,7 +46,10 @@
     </header>
 
     <div class="content-wrapper">
-      <nav class="sidebar">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
+      <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
           <ul class="nav-links">
@@ -454,15 +57,14 @@
             <li><a href="/feed/bleedstream">BLEEDSTREAM</a></li>
             <li><a href="/glyph/crucible">GLYPH CRUCIBLE</a></li>
             <li><a href="/whisper/board">WHISPERBOARD</a></li>
-            <li><a href="/forum">FORUMS</a></li>
+            <li><a href="/forum/scrapyard">SCRAPYARD</a></li>
           </ul>
         </div>
         <div class="nav-section">
           <h3 class="nav-title">PROFILE</h3>
           <ul class="nav-links">
             <li><a href="/profile">DASHBOARD</a></li>
-            <!-- Edit profile link only for owner -->
-            <li id="edit-profile-link" style="display: none;"><a href="/profile/edit">EDIT PROFILE</a></li>
+            <li><a href="/profile/edit">EDIT PROFILE</a></li>
             <li><a href="/feed/new">CREATE POST</a></li>
           </ul>
         </div>
@@ -476,155 +78,111 @@
       </nav>
 
       <main class="main-content">
-        <% if (typeof flash !== 'undefined') { %>
-          <% if (flash.message) { %><div class="flash-message" style="color: var(--terminal-green); margin-bottom: 1rem;"><%= flash.message %></div><% } %>
-          <% if (flash.error) { %><div class="flash-error" style="color: var(--terminal-red); margin-bottom: 1rem;"><%= flash.error %></div><% } %>
-        <% } %>
-        <section class="profile-view-panel">
+        <!-- Profile Header Panel -->
+        <section class="panel profile-view-panel">
+          <div class="scanner-line"></div>
           <div class="panel-header">
-            <h2>USER PROFILE: <span id="profile-view-username"></span></h2>
-            <div class="status-indicator" id="profile-view-status"></div>
+            <h2>ENHANCED PROFILE</h2>
+            <div class="status-indicator">ACTIVE</div>
           </div>
-          <div class="profile-view-content">
-            <!-- Profile navigation bar -->
+          <div class="panel-content">
+            <div class="profile-view-header" id="profile-background" style="height: 250px; position: relative; overflow: hidden; margin-bottom: 2rem; border: 2px solid var(--terminal-dim-green);">
+              <div id="profile-header-image" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;"></div>
+              <div style="position: absolute; bottom: 1rem; left: 1rem; display: flex; gap: 1rem; align-items: flex-end; z-index: 10;">
+                <div id="profile-avatar" style="width: 120px; height: 120px; border: 3px solid var(--terminal-green); border-radius: 50%; overflow: hidden; background: var(--bg-inset); box-shadow: var(--glow-medium);"></div>
+                <div style="background: rgba(0,0,0,0.85); padding: 1rem; border: 1px solid var(--terminal-green); max-width: 400px;">
+                  <h3 id="profile-username" style="margin: 0 0 0.5rem 0; color: var(--terminal-green);"></h3>
+                  <div id="profile-status" style="color: var(--terminal-dim-green); margin-bottom: 0.5rem;"></div>
+                  <div id="profile-district" style="color: var(--terminal-dim-green);"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Profile Navigation -->
             <div class="profile-nav-bar">
               <a href="#profile" class="profile-nav-item active">PROFILE</a>
               <a href="#posts" class="profile-nav-item">POSTS</a>
-              <a href="#activity" class="profile-nav-item">ACTIVITY</a>
-              <a href="#containers" class="profile-nav-item">CONTAINERS</a>
-              ${isOwner ? `<a href="/profile/activity" class="profile-nav-item">FULL ACTIVITY LOG</a>` : ''}
+              <a href="#containers" class="profile-nav-item">WIDGETS</a>
             </div>
-            <!-- Profile header with background -->
-            <div class="profile-view-header" id="profile-view-header">
-              <div id="profile-bg" class="profile-bg-single">
-                <!-- Background will be set by JavaScript -->
-              </div>
-              <!-- Header image if available -->
-              <img id="profile-header-image" class="profile-header-image" style="display: none;" alt="Profile header image">
-            </div>
-
-            <!-- Profile info section with avatar and sigil -->
-            <div class="profile-info-section">
-              <div class="profile-view-avatar">
-                <% if (profile.avatar_url) { %>
-                  <img src="<%= profile.avatar_url %>" alt="Avatar" class="profile-avatar-img" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
-                <% } else { %>
-                  <div class="default-avatar"></div>
-                <% } %>
-              </div>
-
-              <div class="profile-view-info">
-                <h3 id="profile-view-username-large"></h3>
-                <div class="profile-view-district" id="profile-view-district"></div>
-                <div class="profile-view-status-text" id="profile-view-status-text"></div>
-
-                <!-- Repute display -->
-                <div class="repute-display">
-                  <div class="repute-bar">
-                    <div class="repute-progress" id="repute-progress"></div>
+            
+            <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 2rem; margin-top: 2rem;">
+              <!-- Main Content Area -->
+              <div>
+                <!-- Profile Sigil with 3D -->
+                <div class="panel" style="margin-bottom: 2rem;">
+                  <div class="panel-header">
+                    <h2>PROFILE SIGIL</h2>
+                    <div class="status-indicator">ACTIVE</div>
                   </div>
-                  <div class="repute-value">
-                    REPUTE: <span id="repute-value">0</span>
+                  <div class="panel-content">
+                    <div id="profile-glyph" style="width: 200px; height: 200px; margin: 0 auto;"></div>
                   </div>
                 </div>
-
-                <!-- Rewards display -->
-                <div class="rewards-display" id="rewards-display">
-                  <!-- Rewards will be injected here -->
+                
+                <!-- Custom Content -->
+                <div class="panel">
+                  <div class="panel-header">
+                    <h2>CUSTOM CODE</h2>
+                    <div class="status-indicator">CUSTOM</div>
+                  </div>
+                  <div class="panel-content">
+                    <style id="profile-custom-css"></style>
+                    <div id="profile-custom-html"></div>
+                  </div>
+                </div>
+                
+                <!-- Profile Containers/Widgets -->
+                <div id="profile-containers" style="margin-top: 2rem;">
+                  <!-- Containers will be injected here -->
                 </div>
               </div>
-
-              <div class="profile-sigil-display">
-                <div class="profile-sigil-wrapper" id="profile-sigil-wrapper">
-                  <!-- Sigil will be injected here -->
+              
+              <!-- Sidebar -->
+              <div>
+                <div class="panel">
+                  <div class="panel-header">
+                    <h2>BIO</h2>
+                    <div class="status-indicator">INFO</div>
+                  </div>
+                  <div class="panel-content">
+                    <div id="profile-bio"></div>
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="profile-sidebar">
-              <img src="<%= profile.avatar_url || '/images/default-avatar.png' %>" alt="Avatar" class="sidebar-avatar" style="width:100px;height:100px;border-radius:50%;margin-bottom:1rem;">
-              <div class="sidebar-bio">
-                <%= (profile.bio || 'No bio set').replace(/\n/g, '<br>') %>
-                <!-- marked.js placeholder: document.querySelector('.sidebar-bio').innerHTML = marked('<%= profile.bio %>'); -->
-              </div>
-              <% if (groupedContainers && groupedContainers.sidebar && groupedContainers.sidebar.length > 0) { %>
-                <div class="sidebar-widget">
-                  <% groupedContainers.sidebar.forEach(function(container) { %>
-                    <div class="widget <%= container.container_type %>">
-                      <% if (container.container_type === 'text') { %><div class="widget-text"><%= container.content.replace(/\n/g, '<br>') %></div><% } %>
-                      <% if (container.container_type === 'iframe') { %><iframe src="<%= container.content %>" frameborder="0" style="width:100%;height:200px;"></iframe><% } %>
-                      <% if (container.container_type === 'image') { %><img src="<%= container.content %>" alt="Sidebar Image" style="width:100%;"><% } %>
+                
+                <div class="panel" style="margin-top: 1rem;">
+                  <div class="panel-header">
+                    <h2>STATS</h2>
+                    <div class="status-indicator">DATA</div>
+                  </div>
+                  <div class="panel-content">
+                    <div id="profile-stats">
+                      <div style="margin-bottom: 1rem;">
+                        <strong>REPUTATION:</strong> <span id="repute-value">0</span>
+                      </div>
+                      <div id="rewards-display"></div>
                     </div>
-                  <% }); %>
+                  </div>
                 </div>
-              <% } %>
-            </div>
-
-            <!-- Owner-only controls -->
-            <div class="profile-controls profile-controls-margin" id="profile-controls">
-              <div class="profile-control-left">
-                <a href="/profile/edit" class="edit-profile-btn">EDIT PROFILE</a>
+                
+                <!-- Owner Controls -->
+                <div id="owner-controls" style="display: none; margin-top: 1rem;">
+                  <a href="/profile/edit" class="button" style="width: 100%; text-align: center; display: block; margin-bottom: 0.5rem;">EDIT PROFILE</a>
+                  <a href="/profile/edit#glyph" class="button" style="width: 100%; text-align: center; display: block;">CHANGE SIGIL</a>
+                </div>
               </div>
-
-              <div class="action-buttons profile-control-right">
-                <a href="/profile/edit#background" class="action-button">CHANGE BACKGROUND</a>
-                <a href="/profile/edit#glyph" class="action-button">CHANGE SIGIL</a>
-                <a href="/profile/edit#widgets" class="action-button">EDIT WIDGETS</a>
-              </div>
-            </div>
-
-            <!-- Main Content -->
-            <div class="profile-main">
-              <% if (profile.layout_type === 'one-column') { %>
-                <div class="main-one-column">
-                  <div class="main-markdown">
-                    <%= (profile.main_content && profile.main_content.length > 0 ? profile.main_content[0].content || '' : 'No content').replace(/\n/g, '<br>') %>
-                    <!-- marked.js placeholder: Use marked to render main_content markdown -->
-                  </div>
-                </div>
-              <% } else { %>
-                <div class="main-two-column">
-                  <div class="main-left">
-                    <% if (groupedContainers && groupedContainers.mainLeft && groupedContainers.mainLeft.length > 0) { %>
-                      <% groupedContainers.mainLeft.forEach(function(container) { %>
-                        <div class="widget <%= container.container_type %>">
-                          <% if (container.container_type === 'text') { %><div class="widget-text"><%= container.content.replace(/\n/g, '<br>') %></div><% } %>
-                          <% if (container.container_type === 'iframe') { %><iframe src="<%= container.content %>" frameborder="0"></iframe><% } %>
-                          <% if (container.container_type === 'image') { %><img src="<%= container.content %>" alt="Widget Image"><% } %>
-                        </div>
-                      <% }); %>
-                    <% } else { %><p>No left zone content</p><% } %>
-                  </div>
-                  <div class="main-right">
-                    <% if (groupedContainers && groupedContainers.mainRight && groupedContainers.mainRight.length > 0) { %>
-                      <% groupedContainers.mainRight.forEach(function(container) { %>
-                        <div class="widget <%= container.container_type %>">
-                          <% if (container.container_type === 'text') { %><div class="widget-text"><%= container.content.replace(/\n/g, '<br>') %></div><% } %>
-                          <% if (container.container_type === 'iframe') { %><iframe src="<%= container.content %>" frameborder="0"></iframe><% } %>
-                          <% if (container.container_type === 'image') { %><img src="<%= container.content %>" alt="Widget Image"><% } %>
-                        </div>
-                      <% }); %>
-                    <% } else { %><p>No right zone content</p><% } %>
-                  </div>
-                </div>
-              <% } %>
-            </div>
-
-            <!-- Legacy Profile containers (if needed) -->
-            <div class="profile-containers" id="profile-containers" style="display:none;">
-              <!-- Containers will be injected here if not using zones -->
             </div>
           </div>
         </section>
 
-        <section class="user-view-posts-panel">
+        <!-- Posts Panel -->
+        <section class="panel user-posts-panel">
+          <div class="scanner-line"></div>
           <div class="panel-header">
             <h2>RECENT POSTS</h2>
             <div class="status-indicator">ARCHIVE</div>
           </div>
-          <div class="user-view-posts-content" id="user-view-posts-content">
-            <!-- User posts will be injected here -->
+          <div class="panel-content">
+            <div id="user-posts-content"></div>
           </div>
         </section>
       </main>
@@ -641,450 +199,188 @@
   </div>
 
   <script>
-    // Inject data from server
-  const data = __DATA__;
-    const profile = data.profile;
+    const data = __DATA__;
+    const profile = data.profile || {};
     const user = data.user;
     const glyph = data.glyph;
-    const posts = data.posts;
-    const isOwner = data.isOwner;
-    const userContainers = data.containers || [];
-    const userRewards = data.rewards || [];
-    let glyph3DRenderer = null;
+    const posts = data.posts || [];
+    const isOwner = data.isOwner || false;
+    const containers = data.containers || [];
+    const rewards = data.rewards || [];
 
-    // Apply profile theme if set
-    if (profile.theme_template) {
-      window.profileThemes.apply(profile.theme_template);
-    }
-
-    // Update user status in header
+    // Update user status
     const userStatusEl = document.getElementById('user-status');
     if (user) {
       userStatusEl.innerHTML = `
         <div class="logged-in">
           <span class="username">${user.username}</span>
           <div class="user-links">
-            <a href="/profile">PROFILE</a>
-            <a href="/auth/logout">LOGOUT</a>
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
         </div>
       `;
     } else {
       userStatusEl.innerHTML = `
         <div class="logged-out">
-          <a href="/auth/login" class="login-btn">LOGIN</a>
-          <a href="/auth/register" class="register-btn">REGISTER</a>
+          <a href="/auth/login" class="button">LOGIN</a>
+          <a href="/auth/register" class="button">REGISTER</a>
         </div>
       `;
     }
 
-    // Show edit profile link if owner
+    // Show owner controls
     if (isOwner) {
-      document.getElementById('edit-profile-link').style.display = 'list-item';
-      document.getElementById('profile-controls').style.display = 'block';
+      document.getElementById('owner-controls').style.display = 'block';
     }
+
+    // Get username
+    const username = profile.users ? profile.users.username : (user ? user.username : 'Unknown');
 
     // Update profile details
-    document.getElementById('profile-view-username').textContent = profile.username;
-    document.getElementById('profile-view-username-large').textContent = profile.username;
-    document.getElementById('profile-view-status').textContent = profile.status;
-    document.getElementById('profile-view-status-text').textContent = profile.status;
-    document.getElementById('profile-view-district').textContent = `DISTRICT: ${profile.district_name || 'UNKNOWN'}`;
+    document.getElementById('profile-username').textContent = username;
+    document.getElementById('profile-status').textContent = profile.status || 'No status set';
+    document.getElementById('profile-district').textContent = `DISTRICT: ${profile.district_name || 'UNKNOWN'}`;
 
-    // Update reputation display
-    const reputeValue = profile.reputation || 0;
-    document.getElementById('repute-value').textContent = reputeValue;
-
-    // Calculate progress to next reward tier
-    const nextRewardTier = calculateNextRewardTier(reputeValue);
-    if (nextRewardTier.required > 0) {
-      const progressPercent = Math.min(100, (reputeValue / nextRewardTier.required) * 100);
-      document.getElementById('repute-progress').style.width = progressPercent + '%';
+    // Set background/header image
+    if (profile.header_image || profile.background_image) {
+      const bgEl = document.getElementById('profile-header-image');
+      bgEl.style.backgroundImage = `url(${profile.header_image || profile.background_image})`;
     }
 
-    // Function to calculate next reward tier
-    function calculateNextRewardTier(reputation) {
-      const tiers = [0, 100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 750];
-      let nextTier = 0;
-
-      for (let tier of tiers) {
-        if (tier > reputation) {
-          nextTier = tier;
-          break;
-        }
-      }
-
-      return {
-        current: reputation,
-        required: nextTier,
-        progress: nextTier > 0 ? reputation / nextTier : 1
-      };
+    // Set avatar
+    const avatarEl = document.getElementById('profile-avatar');
+    if (profile.avatar_url) {
+      avatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="${username}" style="width:100%;height:100%;object-fit:cover;">`;
+    } else {
+      avatarEl.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--terminal-green);">${username.charAt(0).toUpperCase()}</div>`;
     }
 
-    // Display user rewards
-    const rewardsDisplayEl = document.getElementById('rewards-display');
-    if (userRewards && userRewards.length > 0) {
-      userRewards.forEach(reward => {
-        if (reward.is_equipped) {
-          const badgeEl = document.createElement('div');
-          badgeEl.className = `reward-badge ${reward.css_class || ''}`;
-          badgeEl.textContent = reward.name;
-          rewardsDisplayEl.appendChild(badgeEl);
-        }
-      });
-    }
+    // Set bio
+    const bioEl = document.getElementById('profile-bio');
+    bioEl.textContent = profile.bio || 'No bio set';
 
-    // Set background image
-    const profileBgEl = document.getElementById('profile-bg');
-    if (profile.background_image) {
-      // Check background type
-      if (profile.profile_bg_type === 'tiled' && profile.profile_bg_tile) {
-        profileBgEl.className = 'profile-bg-tiled';
-        profileBgEl.style.backgroundImage = `url(${profile.background_image})`;
-      } else {
-        profileBgEl.className = 'profile-bg-single';
-        profileBgEl.style.backgroundImage = `url(${profile.background_image})`;
-      }
-
-      profileBgEl.classList.add('glitch-image');
-      profileBgEl.setAttribute('data-image', profile.background_image);
-    }
-
-    // Set profile glyph
-    const profileSigilWrapperEl = document.getElementById('profile-sigil-wrapper');
+    // Set glyph (with 3D support)
+    const glyphEl = document.getElementById('profile-glyph');
     if (glyph && glyph.svg_data) {
-      // Check if 3D is enabled
-      if (glyph.glyph_3d_model || profile.glyph_3d) {
-        // Create 3D container
-        const glyph3dContainer = document.createElement('div');
-        glyph3dContainer.id = 'profile-sigil-3d';
-        glyph3dContainer.style.width = '100%';
-        glyph3dContainer.style.height = '100%';
-        profileSigilWrapperEl.appendChild(glyph3dContainer);
-
-        // Initialize 3D renderer
-        glyph3DRenderer = new Glyph3DRenderer('profile-sigil-3d', {
-          seed: glyph.seed || profile.username,
-          complexity: 'medium',
-          shape: glyph.glyph_shape || 'sphere',
-          color: glyph.glyph_color || '#00ff00',
+      if (profile.glyph_3d && typeof Glyph3DRenderer !== 'undefined') {
+        new Glyph3DRenderer('profile-glyph', {
+          seed: glyph.seed || username,
           rotationSpeed: (profile.glyph_rotation_speed || 3) * 0.01,
-          autoRotate: true,
-          size: 0.8
+          autoRotate: true
         });
       } else {
-        // Use 2D SVG
-        profileSigilWrapperEl.innerHTML = glyph.svg_data;
+        glyphEl.innerHTML = glyph.svg_data;
       }
     } else {
-      profileSigilWrapperEl.innerHTML = '<span>NO SIGIL SET</span>';
+      glyphEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO SIGIL SET</span>';
     }
 
-    // Display profile containers
-    const profileContainersEl = document.getElementById('profile-containers');
-    if (userContainers && userContainers.length > 0) {
-      userContainers.forEach(container => {
-        const containerEl = document.createElement('div');
-        containerEl.className = 'profile-container';
+    // Set stats
+    document.getElementById('repute-value').textContent = profile.reputation || 0;
 
-        let containerContent = '';
-
-        // Create container header with edit/delete buttons for owner
-        let containerHeader = `
-          <div class="container-header">
-            <h3 class="container-title">${container.title || 'UNTITLED'}</h3>
-            ${isOwner ? `
-              <div class="container-controls">
-                <a href="/profile/container/edit/${container.id}" class="container-edit-btn" title="Edit Container">✎</a>
-                <button class="container-delete-btn" data-id="${container.id}" title="Delete Container">×</button>
-              </div>
-            ` : ''}
-          </div>
-          <div class="container-content container-${container.container_type}">
-            ${generateContainerContent(container)}
-          </div>
-        `;
-
-        containerEl.innerHTML = containerHeader;
-
-        profileContainersEl.appendChild(containerEl);
+    // Display rewards
+    const rewardsEl = document.getElementById('rewards-display');
+    if (rewards && rewards.length > 0) {
+      rewards.filter(r => r.is_equipped).forEach(reward => {
+        const badge = document.createElement('div');
+        badge.style.cssText = 'display: inline-block; padding: 0.25rem 0.5rem; margin: 0.25rem; background: var(--bg-inset); border: 1px solid var(--terminal-green); font-size: 0.8rem;';
+        badge.textContent = reward.repute_rewards ? reward.repute_rewards.name : 'REWARD';
+        rewardsEl.appendChild(badge);
       });
-    } else {
-      // Display default container with instructions
-      if (isOwner) {
-        profileContainersEl.innerHTML = `
-          <div class="profile-container">
-            <div class="container-header">
-              <h3 class="container-title">WELCOME</h3>
-            </div>
-            <div class="container-content container-paragraph">
-              <p>This is your profile page. You can add custom containers, change your background, and more.</p>
-              <p>Use the controls above to customize your profile.</p>
-            </div>
+    }
+
+    // Custom CSS/HTML
+    document.getElementById('profile-custom-css').textContent = profile.custom_css || '';
+    const customHtmlEl = document.getElementById('profile-custom-html');
+    customHtmlEl.innerHTML = profile.custom_html || '<span style="color: var(--terminal-dim-green);">NO CUSTOM CODE</span>';
+
+    // Display containers
+    const containersEl = document.getElementById('profile-containers');
+    if (containers && containers.length > 0) {
+      containers.forEach(container => {
+        const containerDiv = document.createElement('div');
+        containerDiv.className = 'panel';
+        containerDiv.style.marginBottom = '1rem';
+        
+        let content = '';
+        switch (container.container_type) {
+          case 'text':
+            content = container.content || '';
+            break;
+          case 'image':
+            content = `<img src="${container.content}" alt="${container.title}" style="max-width: 100%;">`;
+            break;
+          case 'iframe':
+            content = `<iframe src="${container.content}" frameborder="0" style="width:100%;height:300px;"></iframe>`;
+            break;
+          default:
+            content = container.content || '';
+        }
+        
+        containerDiv.innerHTML = `
+          <div class="panel-header">
+            <h2>${container.title || 'WIDGET'}</h2>
+            <div class="status-indicator">${container.zone || 'CUSTOM'}</div>
           </div>
+          <div class="panel-content">${content}</div>
         `;
-      } else {
-        profileContainersEl.innerHTML = `
-          <div class="profile-container">
-            <div class="container-header">
-              <h3 class="container-title">USER PROFILE</h3>
-            </div>
-            <div class="container-content container-paragraph">
-              <p>This user hasn't added any custom containers yet.</p>
-            </div>
-          </div>
-        `;
-      }
+        containersEl.appendChild(containerDiv);
+      });
     }
 
-    // Function to render widget content
-    function renderWidgetContent(widget) {
-      const settings = widget.settings || {};
-      
-      switch (widget.type) {
-        case 'text':
-          return `<div class="widget-text">${widget.content || ''}</div>`;
-          
-        case 'image':
-          let gallery = '<div class="widget-image-gallery">';
-          const imageUrls = widget.content ? widget.content.split('\n').filter(url => url.trim()) : [];
-          
-          imageUrls.forEach(url => {
-            gallery += `<img src="${url.trim()}" alt="Gallery image" class="gallery-image">`;
-          });
-          
-          gallery += '</div>';
-          return gallery;
-          
-        case 'video':
-          // Basic video embed
-          if (!widget.content) return '<p>No video URL provided</p>';
-          
-          // Handle YouTube links
-          if (widget.content.includes('youtube.com') || widget.content.includes('youtu.be')) {
-            const autoplay = settings.autoplay === '1' ? '1' : '0';
-            return `<div class="widget-video-container">
-              <iframe width="100%" height="315" src="${widget.content.replace('watch?v=', 'embed/')}?autoplay=${autoplay}"
-              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-            </div>`;
-          }
-          
-          // Generic video
-          return `<div class="widget-video-container">
-            <video controls ${settings.autoplay === '1' ? 'autoplay' : ''} width="100%">
-              <source src="${widget.content}" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          </div>`;
-          
-        case 'iframe':
-          // Handle iframe content
-          const height = settings.height || '300';
-          if (widget.content.startsWith('<iframe')) {
-            return `<div class="widget-iframe-container" style="height:${height}px">
-              ${widget.content}
-            </div>`;
-          } else {
-            return `<div class="widget-iframe-container">
-              <iframe src="${widget.content}" frameborder="0" width="100%" height="${height}px"></iframe>
-            </div>`;
-          }
-          
-        default:
-          return `<div>${widget.content || 'No content available'}</div>`;
-      }
-    }
-    
-    // Legacy function to generate container content based on type
-    function generateContainerContent(container) {
-      const settings = container.settings ? JSON.parse(container.settings) : {};
-
-      switch (container.container_type) {
-        case 'list':
-          let listItems = '';
-          if (container.content) {
-            try {
-              const items = JSON.parse(container.content);
-              items.forEach(item => {
-                listItems += `<li>${item}</li>`;
-              });
-            } catch (e) {
-              listItems = `<li>${container.content}</li>`;
-            }
-          }
-          return `<ul>${listItems}</ul>`;
-
-        case 'image-gallery':
-          let gallery = '';
-          if (container.content) {
-            try {
-              const images = JSON.parse(container.content);
-              images.forEach(img => {
-                gallery += `<img src="${img.url}" alt="${img.caption || ''}" class="gallery-image">`;
-              });
-            } catch (e) {
-              gallery = `<p>Error loading gallery</p>`;
-            }
-          }
-          return gallery;
-
-        case 'paragraph':
-          return `<div>${container.content || ''}</div>`;
-
-        case 'iframe':
-          const iframeSrc = container.content || '';
-          return `<iframe src="${iframeSrc}" frameborder="0" class="container-iframe"></iframe>`;
-
-        default:
-          return container.content || '';
-      }
-    }
-
-    // Display user posts
-    const userPostsContentEl = document.getElementById('user-view-posts-content');
-    if (posts.length > 0) {
+    // Display posts
+    const postsEl = document.getElementById('user-posts-content');
+    if (posts && posts.length > 0) {
       posts.forEach(post => {
-        const postEl = document.createElement('div');
-        postEl.className = 'user-view-post-item';
-        postEl.innerHTML = `
-          <div class="post-title"><a href="/feed/post/${post.id}">${post.title}</a></div>
-          <div class="post-meta">
-            <span class="post-date">${new Date(post.created_at).toLocaleString()}</span>
-            ${post.is_encrypted ? '<span class="post-encrypted">ENCRYPTED</span>' : ''}
+        const postDiv = document.createElement('div');
+        postDiv.style.cssText = 'padding: 1rem; border-bottom: 1px solid var(--terminal-dim-green); margin-bottom: 0.5rem;';
+        postDiv.innerHTML = `
+          <div style="margin-bottom: 0.5rem;">
+            <a href="/feed/post/${post.id}" style="color: var(--terminal-green); font-size: 1.1rem;">${post.title || 'Untitled'}</a>
+          </div>
+          <div style="font-size: 0.9rem; color: var(--terminal-dim-green);">
+            ${new Date(post.created_at).toLocaleString()}
+            ${post.is_encrypted ? '<span style="margin-left: 1rem; color: var(--terminal-red);">ENCRYPTED</span>' : ''}
           </div>
         `;
-        userPostsContentEl.appendChild(postEl);
+        postsEl.appendChild(postDiv);
       });
     } else {
-      userPostsContentEl.innerHTML = '<span>NO POSTS FOUND IN ARCHIVE.</span>';
+      postsEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO POSTS FOUND</span>';
     }
 
-    // Create a simple activity section
-    const activitySection = document.createElement('section');
-    activitySection.className = 'profile-activity-log panel';
-    activitySection.innerHTML = `
-      <div class="panel-header">
-        <h2>RECENT ACTIVITY</h2>
-        <div class="status-indicator">LOG</div>
-      </div>
-      <div class="activity-log-content">
-        <div class="activity-timeline" id="activity-timeline">
-          <div class="activity-item activity-type-profile">
-            <div class="activity-date">${new Date().toLocaleString()}</div>
-            <h3 class="activity-title">Profile Viewed</h3>
-            <div class="activity-description">User profile was accessed.</div>
-            <div class="activity-meta">
-              <span class="activity-type activity-type-profile">PROFILE</span>
-            </div>
-          </div>
-          <div class="activity-item activity-type-system">
-            <div class="activity-date">${new Date(Date.now() - 86400000).toLocaleString()}</div>
-            <h3 class="activity-title">System Login</h3>
-            <div class="activity-description">User logged into the system.</div>
-            <div class="activity-meta">
-              <span class="activity-type activity-type-system">SYSTEM</span>
-            </div>
-          </div>
-          ${isOwner ? `
-            <div class="view-all-activity">
-              <a href="/profile/activity" class="view-all-btn">VIEW FULL ACTIVITY LOG</a>
-            </div>
-          ` : ''}
-        </div>
-      </div>
-    `;
-
-    // Add activity section to the main content after posts
-    document.querySelector('.main-content').appendChild(activitySection);
-
-    // Add profile navigation functionality
+    // Navigation
     document.querySelectorAll('.profile-nav-item').forEach(navItem => {
       navItem.addEventListener('click', function(e) {
         e.preventDefault();
-        // Remove active class from all nav items
-        document.querySelectorAll('.profile-nav-item').forEach(item => {
-          item.classList.remove('active');
-        });
-        // Add active class to clicked item
+        document.querySelectorAll('.profile-nav-item').forEach(item => item.classList.remove('active'));
         this.classList.add('active');
-
-        // Get the target section from href
+        
         const targetSection = this.getAttribute('href').substring(1);
-
-        console.log(`Navigating to profile section: ${targetSection}`);
-
-        // For now, just scroll to appropriate section if it exists
-        const sectionMap = {
-          'profile': '.profile-info-section',
-          'posts': '.user-view-posts-panel',
-          'activity': '.profile-activity-log',
-          'containers': '.profile-containers'
+        const sections = {
+          'profile': '.profile-view-panel',
+          'posts': '.user-posts-panel',
+          'containers': '#profile-containers'
         };
-
-        if (sectionMap[targetSection]) {
-          const element = document.querySelector(sectionMap[targetSection]);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
+        
+        const element = document.querySelector(sections[targetSection]);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
       });
     });
 
-    // Check URL hash for direct section navigation
-    if (window.location.hash) {
-      const targetId = window.location.hash.substring(1);
-      const targetNav = document.querySelector(`.profile-nav-item[href="#${targetId}"]`);
-
-      if (targetNav) {
-        targetNav.click();
-      }
-    }
-
-    // Add event listeners for container delete buttons
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('container-delete-btn')) {
-        const containerId = e.target.getAttribute('data-id');
-        if (containerId) {
-          if (confirm('Are you sure you want to delete this container?')) {
-            deleteContainer(containerId);
-          }
-        }
-      }
-    });
-
-    // Function to delete a container
-    async function deleteContainer(containerId) {
-      try {
-        const response = await fetch(`/profile/container/${containerId}`, {
-          method: 'DELETE'
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          // Remove the container from the DOM
-          const containerEl = document.querySelector(`.container-delete-btn[data-id="${containerId}"]`).closest('.profile-container');
-          if (containerEl) {
-            containerEl.remove();
-          }
-
-          // Show success message
-          alert('Container deleted successfully');
-        } else {
-          alert(result.message || 'Failed to delete container');
-        }
-      } catch (error) {
-        console.error('Error deleting container:', error);
-        alert('System error. Could not connect to server.');
-      }
-    }
-
-    // Toggle glitch effects
+    // Toggle glitch
     document.getElementById('toggle-glitch').addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
     });
+
+    if (localStorage.getItem('glitch-active') === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+
+    console.log('Enhanced profile view initialized');
   </script>
 </body>
 </html>

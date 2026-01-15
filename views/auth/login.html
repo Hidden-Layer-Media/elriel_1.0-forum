@@ -4,150 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOGIN | ELRIEL</title>
-  <link rel="stylesheet" href="/css/win98.css">
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
-  <script src="/js/glitch.js" defer></script>
-  <style>
-    .auth-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
-    
-    .auth-panel {
-      background-color: var(--win98-bg);
-      border-width: 2px;
-      border-style: solid;
-      border-color: var(--win98-border-light) var(--win98-border-darker) var(--win98-border-darker) var(--win98-border-light);
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    
-    .auth-titlebar {
-      background-color: var(--win98-title-bg);
-      color: var(--win98-title-text);
-      padding: 2px 3px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      font-weight: bold;
-    }
-    
-    .auth-window-controls {
-      display: flex;
-    }
-    
-    .auth-window-control {
-      width: 16px;
-      height: 14px;
-      margin-left: 2px;
-      background-color: var(--win98-button-face);
-      border-width: 1px;
-      border-style: solid;
-      border-color: var(--win98-border-light) var(--win98-border-darker) var(--win98-border-darker) var(--win98-border-light);
-      font-size: 9px;
-      line-height: 12px;
-      text-align: center;
-      color: black;
-    }
-    
-    .auth-content {
-      padding: 16px;
-      background-color: var(--win98-window-bg);
-      border-top: 1px solid var(--win98-border-dark);
-    }
-    
-    .form-group {
-      margin-bottom: 16px;
-      text-align: left;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--win98-text);
-      font-size: 11px;
-    }
-    
-    .form-group input {
-      width: 100%;
-      padding: 4px;
-      background-color: white;
-      border-width: 2px;
-      border-style: solid;
-      border-color: var(--win98-border-darker) var(--win98-border-light) var(--win98-border-light) var(--win98-border-darker);
-      color: var(--win98-text);
-      font-family: 'MS Sans Serif', sans-serif;
-      font-size: 11px;
-    }
-    
-    .form-group input:focus {
-      outline: 1px dotted black;
-    }
-
-    .sidebar-toggle-icon {
-      font-size: 20px;
-      color: var(--terminal-green, #8a2be2);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar-toggle-icon:hover {
-      background-color: rgba(138, 43, 226, 0.2);
-      box-shadow: 0 0 10px var(--glow-color, rgba(138, 43, 226, 0.5));
-    }
-
-    @media (max-width: 768px) {
-      .sidebar-toggle-icon {
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        z-index: 1100;
-        background-color: rgba(0,0,0,0.8);
-        border: 1px solid var(--terminal-green);
-      }
-      .sidebar-toggle-icon:hover {
-        background-color: var(--terminal-green);
-        color: var(--terminal-bg);
-      }
-    }
-  </style>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
+</head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
-      </div>
-      <div class="user-panel">
-        <div id="user-status">
-          <!-- User status will be injected here -->
-        </div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
     </header>
 
     <div class="content-wrapper">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
       <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
@@ -159,15 +48,6 @@
             <li><a href="/forum/scrapyard">SCRAPYARD</a></li>
           </ul>
         </div>
-        <button type="button" class="mobile-nav-toggle sidebar-toggle-icon" id="mobile-nav-toggle">></button>
-        <div class="nav-section">
-          <h3 class="nav-title">PROFILE</h3>
-          <ul class="nav-links">
-            <li><a href="/profile">DASHBOARD</a></li>
-            <li><a href="/profile/edit">EDIT PROFILE</a></li>
-            <li><a href="/feed/new">CREATE POST</a></li>
-          </ul>
-        </div>
         <div class="nav-section">
           <h3 class="nav-title">SYSTEM</h3>
           <ul class="nav-links">
@@ -177,32 +57,31 @@
         </div>
       </nav>
 
-      <main class="main-content">
-        <section class="auth-panel">
-          <div class="auth-titlebar">
-            <div class="win98-titlebar-text">LOGIN TO ELRIEL</div>
-            <div class="auth-window-controls">
-              <div class="auth-window-control">_</div>
-              <div class="auth-window-control">&#x25a1;</div>
-              <div class="auth-window-control">&#xd7;</div>
-            </div>
+      <main class="main-content" style="display: flex; align-items: center; justify-content: center;">
+        <section class="panel auth-panel" style="max-width: 500px; width: 100%;">
+          <div class="scanner-line"></div>
+          <div class="panel-header">
+            <h2>TERMINAL ACCESS</h2>
+            <div class="status-indicator">AUTH</div>
           </div>
-          <div class="auth-content">
+          <div class="panel-content">
             <form id="login-form">
               <div class="form-group">
                 <label for="username">USERNAME:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" required placeholder="Enter username" autocomplete="username">
               </div>
               <div class="form-group">
                 <label for="password">PASSWORD:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required placeholder="Enter password" autocomplete="current-password">
               </div>
-              <button type="submit" class="auth-button" id="login-button">ACCESS TERMINAL</button>
+              <div class="form-actions" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="button auth-button">ACCESS TERMINAL</button>
+                <div class="switch-auth" style="text-align: center; font-size: 0.9rem; color: var(--terminal-dim-green);">
+                  NEW USER? <a href="/auth/register" style="color: var(--terminal-green);">REGISTER NEW TERMINAL IDENTITY</a>
+                </div>
+              </div>
             </form>
-            <div class="switch-auth">
-              NEW USER? <a href="/auth/register">REGISTER NEW TERMINAL IDENTITY</a>
-            </div>
-            <div id="error-message" class="error-message"></div>
+            <div id="error-message" style="color: var(--terminal-red); margin-top: 1rem; text-align: center;"></div>
           </div>
         </section>
       </main>
@@ -211,130 +90,55 @@
     <footer class="main-footer">
       <div class="footer-text">ELRIEL NETWORK // ESTABLISHED 2025 // ALL RIGHTS SURRENDERED</div>
       <div class="footer-glyphs">
-        <span class="glyph">&#x2318;</span>
-        <span class="glyph">&#x235f;</span>
-        <span class="glyph">&#x2394;</span>
+        <span class="glyph">⌘</span>
+        <span class="glyph">⍟</span>
+        <span class="glyph">⎔</span>
       </div>
     </footer>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Debug: Check if win98.css loaded
-      const cssLink = document.querySelector('link[href="/css/win98.css"]');
-      if (cssLink) {
-        // Create a test link to verify load
-        const testLink = document.createElement('link');
-        testLink.rel = 'stylesheet';
-        testLink.href = '/css/win98.css';
-        testLink.onload = () => console.log('DEBUG: win98.css loaded successfully');
-        testLink.onerror = () => console.error('DEBUG: Failed to load win98.css - 404 or serving issue');
-        document.head.appendChild(testLink);
-      } else {
-        console.error('DEBUG: No win98.css link found in head');
-      }
-
-      // Debug: Test loading cyberpunk-terminal.css and check terminal styles
-      const terminalTestLink = document.createElement('link');
-      terminalTestLink.rel = 'stylesheet';
-      terminalTestLink.href = '/css/cyberpunk-terminal.css';
-      terminalTestLink.onload = () => {
-        console.log('DEBUG: cyberpunk-terminal.css loaded successfully');
-        setTimeout(() => {
-          const bodyStyle = window.getComputedStyle(document.body);
-          const bgColor = bodyStyle.backgroundColor;
-          console.log('DEBUG: Body background after terminal CSS:', bgColor);
-          if (bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent' && bgColor !== 'white') {
-            console.log('DEBUG: Terminal styles applied - dark background confirmed');
-          } else {
-            console.error('DEBUG: Terminal styles not applied even after load');
-          }
-        }, 100);
-      };
-      terminalTestLink.onerror = () => console.error('DEBUG: Failed to load cyberpunk-terminal.css - check serving');
-      document.head.appendChild(terminalTestLink);
-
-      // Initial style check
-      setTimeout(() => {
-        const bodyStyle = window.getComputedStyle(document.body);
-        const bgColor = bodyStyle.backgroundColor;
-        const hasTerminalClass = document.body.classList.contains('terminal');
-        console.log('DEBUG: Initial body background color:', bgColor);
-        console.log('DEBUG: Body has terminal class:', hasTerminalClass);
-        if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent' || bgColor === 'white') {
-          console.error('DEBUG: Initial styles missing - likely no terminal CSS');
-        }
-      }, 50);
-
-      // Inject data from server
+    // Handle login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMessageEl = document.getElementById('error-message');
+      errorMessageEl.textContent = '';
+      
       try {
-        const data = __DATA__;
-        const userStatusEl = document.getElementById('user-status');
-        if (data && data.user) {
-          userStatusEl.innerHTML = `
-            <div class="logged-in">
-              <span class="username">${data.user.username}</span>
-              <div class="user-links">
-                <a href="/profile">PROFILE</a>
-                <a href="/auth/logout">LOGOUT</a>
-              </div>
-            </div>
-          `;
+        const response = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          window.location.href = '/profile';
         } else {
-          userStatusEl.innerHTML = `
-            <div class="logged-out">
-              <a href="/auth/login" class="login-btn">LOGIN</a>
-              <a href="/auth/register" class="register-btn">REGISTER</a>
-            </div>
-          `;
+          errorMessageEl.textContent = data.message || 'LOGIN FAILED. ACCESS DENIED.';
         }
-      } catch (err) {}
-
-      // Extract login logic to function
-      async function handleLogin() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const errorMessageEl = document.getElementById('error-message');
-        try {
-          const response = await fetch('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-          });
-          const data = await response.json();
-          if (data.success) {
-            window.location.href = '/profile';
-          } else {
-            errorMessageEl.textContent = data.message || 'Login failed. Unknown error.';
-          }
-        } catch (error) {
-          errorMessageEl.textContent = 'System error. Could not connect to authentication server.';
-        }
+      } catch (error) {
+        console.error('Login error:', error);
+        errorMessageEl.textContent = 'SYSTEM ERROR. COULD NOT CONNECT TO AUTHENTICATION SERVER.';
       }
-      // Add direct button click listener
-      const loginButton = document.getElementById('login-button');
-      if (loginButton) {
-        loginButton.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          handleLogin();
-        });
-      }
-      // Add form submit listener
-      const loginForm = document.getElementById('login-form');
-      if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          handleLogin();
-        });
-      }
-      // Toggle glitch effects
-      document.getElementById('toggle-glitch').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.body.classList.toggle('glitch-active');
-      });
     });
+    
+    // Toggle glitch
+    document.getElementById('toggle-glitch').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
+    });
+
+    if (localStorage.getItem('glitch-active') === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+
+    console.log('Login page initialized');
   </script>
-  <script defer src="/js/sidebar-manager.js"></script>
 </body>
 </html>

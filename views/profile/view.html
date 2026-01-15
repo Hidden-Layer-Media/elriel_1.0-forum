@@ -4,500 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PROFILE | ELRIEL</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/glitch.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
   <link rel="stylesheet" href="/css/profile.css">
-  <link rel="stylesheet" href="/css/win98.css">
   <link rel="stylesheet" href="/css/responsive-fixes.css">
   <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
-  <script src="/js/glitch.js" defer></script>
-  <script src="/js/profile-themes.js" defer></script>
-  <script src="/js/profile-widgets.js" defer></script>
-  <script src="/js/win98.js" defer></script>
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
   <script src="/js/sidebar-manager.js" defer></script>
-  <style>
-    /* Mystical hacker profile styles - Web 1.0/Geocities inspired with enhanced mystical elements */
-    body.terminal {
-      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23550000' fill-opacity='0.3' fill-rule='evenodd'%3E%3Cpath d='M0 20L20 0L40 20L20 40z' /%3E%3C/g%3E%3C/svg%3E");
-      background-color: #000000;
-    }
-
-    .profile-view-panel {
-      border: 3px solid var(--terminal-green);
-      box-shadow: 0 0 25px var(--glow-color), inset 0 0 15px rgba(255, 0, 0, 0.3);
-      position: relative;
-      overflow: visible;
-      animation: panel-pulse 4s infinite alternate;
-    }
-
-    @keyframes panel-pulse {
-      0% {
-        box-shadow: 0 0 20px var(--glow-color), inset 0 0 10px rgba(255, 0, 0, 0.2);
-        will-change: box-shadow;
-      }
-      100% {
-        box-shadow: 0 0 30px var(--glow-color), inset 0 0 20px rgba(255, 0, 0, 0.4);
-        will-change: box-shadow;
-      }
-    }
-
-    .profile-view-panel::before {
-      content: '';
-      position: absolute;
-      top: -5px;
-      left: -5px;
-      right: -5px;
-      bottom: -5px;
-      border: 1px solid var(--terminal-dim-green);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .panel-header {
-      background-color: rgba(10, 0, 0, 0.8);
-      border-bottom: 2px solid var(--terminal-green);
-      background-image: linear-gradient(to right, rgba(0,0,0,0.9), rgba(50,0,0,0.7), rgba(0,0,0,0.9));
-    }
-
-    .panel-header h2 {
-      text-shadow: 0 0 10px var(--red-glow-strong);
-      letter-spacing: 2px;
-    }
-
-    .profile-view-header {
-      height: 250px;
-      border: 3px ridge var(--terminal-green);
-      box-shadow: 0 0 15px var(--glow-color), inset 0 0 30px rgba(255, 0, 0, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .profile-view-background {
-      opacity: 0.7;
-      filter: contrast(170%) brightness(40%) hue-rotate(320deg);
-      mix-blend-mode: color-burn;
-      animation: background-pulse 10s ease infinite alternate;
-    }
-
-    @keyframes background-pulse {
-      0% { filter: contrast(150%) brightness(30%) hue-rotate(320deg); }
-      50% { filter: contrast(170%) brightness(50%) hue-rotate(340deg); }
-      100% { filter: contrast(150%) brightness(30%) hue-rotate(320deg); }
-    }
-
-    .profile-view-background::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background:
-        linear-gradient(to bottom,
-          rgba(0,0,0,0.5) 0%,
-          rgba(20,0,0,0.3) 50%,
-          rgba(0,0,0,0.5) 100%);
-      pointer-events: none;
-    }
-
-    .scanner-line {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background-color: rgba(255, 0, 0, 0.7);
-      opacity: 0.8;
-      z-index: 10;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
-      pointer-events: none;
-      animation: scan 3s linear infinite;
-    }
-
-    @keyframes scan {
-      0% {
-        transform: translateY(0);
-        will-change: transform;
-      }
-      100% {
-        transform: translateY(100%);
-        will-change: transform;
-      }
-    }
-
-    .profile-view-avatar {
-      border: 3px outset #800000;
-      box-shadow: 0 0 20px var(--red-glow-strong);
-      width: 120px;
-      height: 120px;
-      background-color: #000000;
-      overflow: hidden;
-      z-index: 10;
-    }
-
-    .default-avatar {
-      background-color: #222;
-      border: 1px solid var(--terminal-dim-green);
-      box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
-    }
-
-    .profile-view-info {
-      background-color: rgba(20, 0, 0, 0.8);
-      padding: 15px;
-      border: 2px solid var(--terminal-dim-green);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.8);
-      animation: info-pulse 3s infinite alternate;
-    }
-
-    @keyframes info-pulse {
-      0% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.8); }
-      100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.9); }
-    }
-
-    .profile-view-info h3 {
-      text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 0 0 15px var(--red-glow-strong);
-      font-family: var(--header-font);
-      letter-spacing: 3px;
-      animation: text-glow 4s infinite alternate;
-    }
-
-    @keyframes text-glow {
-      0% { text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 0 0 8px var(--glow-color); }
-      100% { text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 0 0 20px var(--red-glow-strong), 0 0 30px var(--red-glow-medium); }
-    }
-
-    .profile-view-district {
-      color: var(--terminal-dim-green);
-      font-family: var(--header-font);
-      letter-spacing: 1px;
-      font-weight: bold;
-      text-shadow: 1px 1px 0 #000;
-    }
-
-    /* Win98-style navigation bar */
-    .profile-nav-bar {
-      display: flex;
-      background-color: #440000;
-      margin-bottom: 1.5rem;
-      border: 2px outset #800000;
-    }
-
-    .profile-nav-item {
-      flex: 1;
-      text-align: center;
-      padding: 0.8rem 0;
-      color: #ffffff;
-      text-shadow: 1px 1px 0 #000000;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      border-right: 1px solid #808080;
-      font-family: var(--header-font);
-      font-weight: bold;
-    }
-
-    .profile-nav-item:last-child {
-      border-right: none;
-    }
-
-    .profile-nav-item:hover {
-      background-color: #550000;
-      text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-    }
-
-    .profile-nav-item:active {
-      background-color: #330000;
-      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    .profile-nav-item.active {
-      background-color: #330000;
-      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
-      font-weight: bold;
-    }
-
-    /* Enhance the profile details section */
-    .profile-view-details {
-      border: 2px solid var(--terminal-dim-green);
-      padding: 20px;
-      background-color: rgba(15, 0, 0, 0.9);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.8);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .profile-view-details::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23330000' fill-opacity='0.3' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='1'/%3E%3Ccircle cx='13' cy='13' r='1'/%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-      opacity: 0.5;
-      z-index: -1;
-    }
-
-    .profile-view-section {
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px dashed var(--terminal-dim-green);
-      position: relative;
-    }
-
-    .profile-view-section::after {
-      content: "■ ■ ■";
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: var(--terminal-dim-green);
-      letter-spacing: 5px;
-      font-size: 0.7rem;
-    }
-
-    .profile-view-section:last-child::after {
-      display: none;
-    }
-
-    .profile-view-section .section-title {
-      color: var(--terminal-green);
-      text-shadow: 0 0 5px var(--glow-color);
-      font-family: var(--header-font);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      position: relative;
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      padding-left: 1rem;
-      border-left: 4px double var(--terminal-green);
-    }
-
-    .profile-view-section .section-content {
-      color: var(--terminal-text);
-      background-color: rgba(0, 0, 0, 0.4);
-      padding: 10px;
-      border: 1px solid rgba(255, 0, 0, 0.1);
-      font-family: var(--terminal-font);
-    }
-
-    /* Windows 98-style edit button */
-    .edit-profile-btn {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.7rem 1.5rem;
-      background-color: #440000;
-      border: 2px outset #800000;
-      color: #ffffff;
-      text-shadow: 1px 1px 0 #000000;
-      text-decoration: none;
-      font-family: var(--header-font);
-      letter-spacing: 1px;
-      text-align: center;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-      font-weight: bold;
-      font-size: 1.1rem;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .edit-profile-btn:hover {
-      background-color: #550000;
-      box-shadow: 0 0 15px var(--red-glow-medium);
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-    }
-
-    .edit-profile-btn:active {
-      border-style: inset;
-      transform: translateY(2px);
-      box-shadow: none;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 1.5rem;
-    }
-
-    .action-button {
-      flex: 1;
-      padding: 0.6rem 1rem;
-      background-color: #440000;
-      border: 2px outset #800000;
-      color: #ffffff;
-      text-shadow: 1px 1px 0 #000000;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      font-family: var(--header-font);
-      font-weight: bold;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    }
-
-    .action-button:hover {
-      background-color: #550000;
-      box-shadow: 0 0 8px var(--red-glow-medium);
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    }
-
-    .action-button:active {
-      border-style: inset;
-      transform: translateY(2px);
-      box-shadow: none;
-    }
-
-    /* Post styling */
-    .user-view-posts-panel {
-      border: 2px solid var(--terminal-dim-green);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
-      margin-top: 2rem;
-    }
-
-    .user-view-posts-content {
-      background-color: rgba(10, 0, 0, 0.8);
-      padding: 1rem;
-    }
-
-    .user-view-post-item {
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      border-bottom: 1px solid var(--terminal-dim-green);
-      background-color: rgba(0, 0, 0, 0.4);
-      transition: all 0.3s ease;
-      border-left: 4px solid var(--terminal-dim-green);
-    }
-
-    .user-view-post-item:hover {
-      background-color: rgba(255, 0, 0, 0.15);
-      border-left-color: var(--terminal-green);
-    }
-
-    .post-title a {
-      font-family: var(--header-font);
-      color: var(--terminal-green);
-      text-shadow: 0 0 5px var(--glow-color);
-      display: block;
-      padding: 5px;
-      background-color: rgba(0, 0, 0, 0.3);
-      letter-spacing: 1px;
-    }
-
-    .post-title a:hover {
-      color: var(--terminal-bright);
-      text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
-      animation: glowing 1.5s infinite;
-    }
-
-    /* Geocities/Neoweb style elements */
-    /* Enhanced Web 1.0 style divider */
-    .web1-divider {
-      height: 15px;
-      background: repeating-linear-gradient(45deg, var(--terminal-dim-green), var(--terminal-dim-green) 5px, black 5px, black 10px);
-      margin: 15px 0;
-      box-shadow: 0 0 15px var(--red-glow-medium);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .web1-divider::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,0,0,0.3), transparent);
-      animation: divider-shine 3s infinite;
-    }
-
-    @keyframes divider-shine {
-      0% {
-        transform: translateX(-100%);
-        will-change: transform;
-      }
-      100% {
-        transform: translateX(200%);
-        will-change: transform;
-      }
-    }
-
-    .web1-marquee {
-      background-color: #110000;
-      color: #ff0000;
-      white-space: nowrap;
-      overflow: hidden;
-      border: 2px outset #800000;
-      padding: 5px 0;
-      margin: 10px 0;
-      font-family: var(--header-font);
-      letter-spacing: 1px;
-    }
-
-    .web1-marquee-content {
-      display: inline-block;
-      animation: marquee 20s linear infinite;
-    }
-
-    @keyframes marquee {
-      0% {
-        transform: translateX(100%);
-        will-change: transform;
-      }
-      100% {
-        transform: translateX(-100%);
-        will-change: transform;
-      }
-    }
-
-    .blink-text {
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink {
-      0%, 49% {
-        opacity: 1;
-        will-change: opacity;
-      }
-      50%, 100% {
-        opacity: 0;
-        will-change: opacity;
-      }
-    }
-
-    /* Animation for text glitching */
-    @keyframes glowing {
-      0% {
-        filter: drop-shadow(0 0 5px var(--glow-color));
-        will-change: filter;
-      }
-      50% {
-        filter: drop-shadow(0 0 20px var(--glow-color)) drop-shadow(0 0 30px var(--glow-color));
-        will-change: filter;
-      }
-      100% {
-        filter: drop-shadow(0 0 5px var(--glow-color));
-        will-change: filter;
-      }
-    }
-
-    /* Profile Windows section */
-    .profile-windows-container {
-      background-color: #008080;
-      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z' fill='%23007070' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
-      border: 2px inset #c0c0c0;
-      min-height: 250px;
-    }
-  </style>
+  <script src="/js/performance-fixes.js" defer></script>
+  <script src="/js/profile-themes.js" defer></script>
 </head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -507,7 +44,9 @@
     </header>
 
     <div class="content-wrapper">
+      <!-- Mobile Navigation Toggle -->
       <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
       <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
@@ -516,14 +55,15 @@
             <li><a href="/feed/bleedstream">BLEEDSTREAM</a></li>
             <li><a href="/glyph/crucible">GLYPH CRUCIBLE</a></li>
             <li><a href="/whisper/board">WHISPERBOARD</a></li>
+            <li><a href="/forum/scrapyard">SCRAPYARD</a></li>
           </ul>
         </div>
         <div class="nav-section">
           <h3 class="nav-title">PROFILE</h3>
           <ul class="nav-links">
-            <li><a href="/profile" class="active">DASHBOARD</a></li>
+            <li><a href="/profile">DASHBOARD</a></li>
             <li><a href="/profile/edit">EDIT PROFILE</a></li>
-            <li><a href="/profile/activity">ACTIVITY</a></li>
+            <li><a href="/feed/new">CREATE POST</a></li>
           </ul>
         </div>
         <div class="nav-section">
@@ -536,103 +76,91 @@
       </nav>
 
       <main class="main-content">
-                <div class="web1-marquee">
-                  <div class="web1-marquee-content">
-                    WELCOME TO THE DEEPWEB FORUM OF MYSTICAL HACKER SECRETS... PROCEED WITH CAUTION... KNOWLEDGE IS POWER... TRUTH IS HIDDEN... <span class="blink-text">INCOMING TRANSMISSION...</span> EXPLORE THE SCRAPYARD FOR FORGOTTEN ARTIFACTS... <span class="blink-text">CONNECTION UNSTABLE...</span> DATA CORRUPTION IMMINENT...
+        <!-- Profile Header Panel -->
+        <section class="panel profile-view-panel">
+          <div class="scanner-line"></div>
+          <div class="panel-header">
+            <h2>TERMINAL PROFILE</h2>
+            <div class="status-indicator">ACTIVE</div>
+          </div>
+          <div class="panel-content">
+            <div class="profile-view-header" id="profile-background">
+              <div class="profile-view-avatar" id="profile-avatar">
+                <div class="default-avatar"></div>
+              </div>
+              <div class="profile-view-info">
+                <h3 id="profile-username"></h3>
+                <div class="profile-view-district" id="profile-district"></div>
+                <div class="profile-view-status" id="profile-status"></div>
+              </div>
+            </div>
+            
+            <!-- Profile Navigation -->
+            <div class="profile-nav-bar">
+              <a href="#profile" class="profile-nav-item active">PROFILE</a>
+              <a href="#posts" class="profile-nav-item">POSTS</a>
+              <a href="#glyphs" class="profile-nav-item">GLYPHS</a>
+            </div>
+            
+            <div class="profile-view-details">
+              <div class="profile-view-section">
+                <div class="section-title">BIO</div>
+                <div class="section-content" id="profile-bio">
+                  <!-- Bio will be injected here -->
+                </div>
+              </div>
+              
+              <div class="profile-view-section">
+                <div class="section-title">PROFILE SIGIL</div>
+                <div class="section-content" id="profile-glyph">
+                  <!-- Profile glyph will be injected here -->
+                </div>
+              </div>
+              
+              <div class="profile-view-section">
+                <div class="section-title">CUSTOM CODE</div>
+                <div class="section-content">
+                  <style id="profile-custom-css"></style>
+                  <div id="profile-custom-html"></div>
+                </div>
+              </div>
+              
+              <!-- Profile actions (only shown to owner) -->
+              <div class="profile-view-section" id="owner-controls" style="display: none;">
+                <div class="section-title">PROFILE ACTIONS</div>
+                <div class="section-content">
+                  <a href="/profile/edit" class="button edit-profile-btn">EDIT PROFILE</a>
+                  <div class="action-buttons" style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                    <a href="/profile/edit#background" class="button action-button">CHANGE BACKGROUND</a>
+                    <a href="/profile/edit#glyph" class="button action-button">CHANGE SIGIL</a>
+                    <a href="/glyph/crucible" class="button action-button">GLYPH CRUCIBLE</a>
                   </div>
                 </div>
-
-                <!-- Improved Profile Header Card -->
-                <section class="profile-header-card">
-                  <div class="profile-header-bg" id="profile-view-background"></div>
-                  <div class="profile-header-content">
-                    <div class="profile-header-avatar">
-                      <div class="profile-view-avatar">
-                        <div class="default-avatar"></div>
-                      </div>
-                    </div>
-                    <div class="profile-header-info">
-                      <h2 id="profile-view-username"></h2>
-                      <div class="profile-view-district" id="profile-view-district"></div>
-                      <div class="profile-header-status" id="profile-view-status"></div>
-                    </div>
-                    <div class="profile-header-controls" id="profile-owner-controls">
-                      <a href="/profile/edit" class="edit-profile-btn">EDIT PROFILE</a>
-                      <a href="/profile/edit#background" class="action-button">CHANGE BACKGROUND</a>
-                      <a href="/profile/edit#glyph" class="action-button">CHANGE SIGIL</a>
-                      <a href="/glyph/crucible" class="action-button">GLYPH CRUCIBLE</a>
-                    </div>
-                  </div>
-                </section>
-
-                <!-- Sticky Profile Navigation Bar -->
-                <nav class="profile-nav-bar sticky-nav">
-                  <a href="#profile" class="profile-nav-item active"><span class="nav-icon">👤</span> PROFILE</a>
-                  <a href="#posts" class="profile-nav-item"><span class="nav-icon">📝</span> POSTS</a>
-                  <a href="#activity" class="profile-nav-item"><span class="nav-icon">📜</span> ACTIVITY</a>
-                  <a href="#glyphs" class="profile-nav-item"><span class="nav-icon">🔮</span> GLYPHS</a>
-                </nav>
-
-                <div class="web1-divider"></div>
-
-                <!-- Profile Details Card -->
-                <section class="profile-view-details card-section" id="profile">
-                  <div class="profile-view-section">
-                    <div class="section-title"><span class="section-icon">👤</span> STATUS</div>
-                    <div class="section-content" id="profile-view-status-text"></div>
-                  </div>
-                  <div class="profile-view-section">
-                    <div class="section-title"><span class="section-icon">🔮</span> PROFILE SIGIL</div>
-                    <div class="section-content" id="profile-view-glyph"></div>
-                  </div>
-                  <div class="profile-view-section">
-                    <div class="section-title"><span class="section-icon">📜</span> RECENT ACTIVITY</div>
-                    <div class="section-content">
-                      <div class="profile-activity-log" id="profile-activity-log">
-                        <div class="loading-activity">LOADING ACTIVITY LOG...</div>
-                      </div>
-                      <div class="view-all-activity">
-                        <a href="/activity-log" class="activity-link">VIEW FULL ACTIVITY LOG</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="profile-view-section">
-                    <div class="section-title"><span class="section-icon">⚙️</span> CUSTOM CODE</div>
-                    <div class="section-content">
-                      <style id="profile-view-custom-css"></style>
-                      <style id="profile-view-theme-template"></style>
-                      <div id="profile-view-custom-html"></div>
-                    </div>
-                  </div>
-                </section>
-
-                <!-- Windows 98 Profile Section -->
-                <section class="profile-windows-section">
-                  <div id="profile-windows" class="profile-windows-container"></div>
-                </section>
-
-                <!-- Posts Grid Section -->
-                <section class="user-view-posts-panel card-section" id="posts">
-                  <div class="panel-header">
-                    <h2><span class="section-icon">📝</span> RECENT POSTS</h2>
-                    <div class="status-indicator">ARCHIVE</div>
-                  </div>
-                  <div class="user-view-posts-content posts-grid" id="user-view-posts-content">
-                    <!-- User posts will be injected here -->
-                  </div>
-                </section>
-              </main>
-            </div>
-
-            <footer class="main-footer">
-              <div class="footer-text">ELRIEL NETWORK // ESTABLISHED 2025 // ALL RIGHTS SURRENDERED</div>
-              <div class="footer-glyphs">
-                <span class="glyph">⌘</span>
-                <span class="glyph">⍟</span>
-                <span class="glyph">⎔</span>
               </div>
-            </footer>
+            </div>
           </div>
+        </section>
+
+        <!-- Posts Panel -->
+        <section class="panel user-posts-panel">
+          <div class="scanner-line"></div>
+          <div class="panel-header">
+            <h2>RECENT POSTS</h2>
+            <div class="status-indicator">ARCHIVE</div>
+          </div>
+          <div class="panel-content">
+            <div class="user-posts-content" id="user-posts-content">
+              <!-- User posts will be injected here -->
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="main-footer">
+      <div class="footer-text">ELRIEL NETWORK // ESTABLISHED 2025 // ALL RIGHTS SURRENDERED</div>
+      <div class="footer-glyphs">
+        <span class="glyph">⌘</span>
         <span class="glyph">⍟</span>
         <span class="glyph">⎔</span>
       </div>
@@ -641,12 +169,24 @@
 
   <script>
     // Inject data from server
-  const data = __DATA__;
-    const profile = data.profile;
-    const user = data.user;
-    const glyph = data.glyph;
-    const posts = data.posts;
-    const isOwner = data.isOwner;
+    console.log('Profile view page loading...');
+    let data, profile, user, glyph, posts, isOwner;
+    try {
+      data = __DATA__;
+      profile = data.profile || {};
+      user = data.user;
+      glyph = data.glyph;
+      posts = data.posts || [];
+      isOwner = data.isOwner || false;
+    } catch (err) {
+      console.error('Error accessing __DATA__:', err);
+      data = { profile: {}, user: null, glyph: null, posts: [], isOwner: false };
+      profile = {};
+      user = null;
+      glyph = null;
+      posts = [];
+      isOwner = false;
+    }
 
     // Update user status in header
     const userStatusEl = document.getElementById('user-status');
@@ -655,96 +195,89 @@
         <div class="logged-in">
           <span class="username">${user.username}</span>
           <div class="user-links">
-            <a href="/profile">PROFILE</a>
-            <a href="/auth/logout">LOGOUT</a>
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
         </div>
       `;
     } else {
       userStatusEl.innerHTML = `
         <div class="logged-out">
-          <a href="/auth/login" class="login-btn">LOGIN</a>
-          <a href="/auth/register" class="register-btn">REGISTER</a>
+          <a href="/auth/login" class="button login-btn">LOGIN</a>
+          <a href="/auth/register" class="button register-btn">REGISTER</a>
         </div>
       `;
     }
 
-    // Show edit profile link and controls if owner
+    // Show owner controls if this is the user's own profile
     if (isOwner) {
-      document.getElementById('edit-profile-link').classList.remove('hidden');
-      document.getElementById('profile-owner-controls').classList.remove('hidden');
+      document.getElementById('owner-controls').style.display = 'block';
     }
 
+    // Get username from profile
+    const username = profile.users ? profile.users.username : (user ? user.username : 'Unknown');
+
     // Update profile details
-    document.getElementById('profile-view-username').textContent = profile.username;
-    document.getElementById('profile-view-status').textContent = profile.status;
-    document.getElementById('profile-view-status-text').textContent = profile.status;
-    document.getElementById('profile-view-district').textContent = `DISTRICT: ${profile.district_name || 'UNKNOWN'}`;
+    document.getElementById('profile-username').textContent = username;
+    document.getElementById('profile-status').textContent = profile.status || 'No status set';
+    document.getElementById('profile-district').textContent = `DISTRICT: ${profile.district_name || 'UNKNOWN'}`;
 
     // Set background image
-    const profileBackgroundEl = document.getElementById('profile-view-background');
+    const profileBackgroundEl = document.getElementById('profile-background');
     if (profile.background_image) {
       profileBackgroundEl.style.backgroundImage = `url(${profile.background_image})`;
-      profileBackgroundEl.classList.add('glitch-image');
-      profileBackgroundEl.setAttribute('data-image', profile.background_image);
+      profileBackgroundEl.style.backgroundSize = profile.profile_bg_tile ? 'auto' : 'cover';
+      profileBackgroundEl.style.backgroundRepeat = profile.profile_bg_tile ? 'repeat' : 'no-repeat';
+      profileBackgroundEl.style.backgroundPosition = 'center';
+    }
+
+    // Set avatar
+    const profileAvatarEl = document.getElementById('profile-avatar');
+    if (profile.avatar_url) {
+      profileAvatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="${username}" style="width:100%;height:100%;border-radius:0;object-fit:cover;">`;
+    } else {
+      profileAvatarEl.innerHTML = `<div class="default-avatar" style="width:100%;height:100%;background:var(--bg-inset);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--terminal-green);">${username.charAt(0).toUpperCase()}</div>`;
+    }
+
+    // Set bio
+    const profileBioEl = document.getElementById('profile-bio');
+    if (profile.bio) {
+      profileBioEl.textContent = profile.bio;
+    } else {
+      profileBioEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO BIO SET</span>';
     }
 
     // Set profile glyph
-    const profileGlyphEl = document.getElementById('profile-view-glyph');
+    const profileGlyphEl = document.getElementById('profile-glyph');
     if (glyph && glyph.svg_data) {
       profileGlyphEl.innerHTML = glyph.svg_data;
     } else {
-      profileGlyphEl.innerHTML = '<span class="blink-text">NO SIGIL SET</span>';
+      profileGlyphEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO SIGIL SET</span>';
     }
 
-    // Load recent activity from posts as proxy until dedicated API
-    const activityLogEl = document.getElementById('profile-activity-log');
-    if (posts && posts.length > 0) {
-      let activityHtml = '';
-      posts.slice(0, 5).forEach(post => {
-        activityHtml += `
-          <div class="activity-item">
-            <span class="activity-date">${new Date(post.created_at).toLocaleDateString()}</span>
-            <span class="activity-action">Posted: "${post.title.substring(0, 50)}..."</span>
-            ${post.is_encrypted ? '<span class="activity-encrypted"> [ENCRYPTED]</span>' : ''}
-          </div>
-        `;
-      });
-      activityLogEl.innerHTML = activityHtml || '<div class="no-activity">No recent activity.</div>';
+    // Inject custom CSS and HTML
+    document.getElementById('profile-custom-css').textContent = profile.custom_css || '';
+    const customHtmlEl = document.getElementById('profile-custom-html');
+    if (profile.custom_html) {
+      customHtmlEl.innerHTML = profile.custom_html;
     } else {
-      activityLogEl.innerHTML = '<div class="no-activity">No recent activity.</div>';
+      customHtmlEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO CUSTOM CODE</span>';
     }
-
-    // Inject custom CSS, theme template, and HTML
-    document.getElementById('profile-view-custom-css').textContent = profile.custom_css || '';
-    document.getElementById('profile-view-custom-html').innerHTML = profile.custom_html || '<span class="blink-text">NO CUSTOM CODE</span>';
-
-    // Apply theme template if exists
-    applyThemeTemplate(profile.theme_template || 'darkweb');
-
-    // Load profile windows
-    loadProfileWindows();
 
     // Add profile navigation functionality
     document.querySelectorAll('.profile-nav-item').forEach(navItem => {
       navItem.addEventListener('click', function(e) {
         e.preventDefault();
-        // Remove active class from all nav items
         document.querySelectorAll('.profile-nav-item').forEach(item => {
           item.classList.remove('active');
         });
-        // Add active class to clicked item
         this.classList.add('active');
 
-        // Get the target section from href
         const targetSection = this.getAttribute('href').substring(1);
-
-        // For demonstration, just scroll to appropriate section if it exists
         const sectionMap = {
           'profile': '.profile-view-details',
-          'posts': '.user-view-posts-panel',
-          'activity': '.profile-activity-log',
-          'glyphs': '#profile-view-glyph'
+          'posts': '.user-posts-panel',
+          'glyphs': '#profile-glyph'
         };
 
         if (sectionMap[targetSection]) {
@@ -756,279 +289,45 @@
       });
     });
 
-    // Display user posts with animation for empty state
-    const userPostsContentEl = document.getElementById('user-view-posts-content');
+    // Display user posts
+    const userPostsContentEl = document.getElementById('user-posts-content');
     if (posts && posts.length > 0) {
+      userPostsContentEl.innerHTML = '';
       posts.forEach(post => {
         const postEl = document.createElement('div');
-        postEl.className = 'user-view-post-item';
+        postEl.className = 'user-post-item';
+        postEl.style.cssText = 'padding: 1rem; border-bottom: 1px solid var(--terminal-dim-green); margin-bottom: 0.5rem; border-left: 3px solid var(--terminal-dim-green); transition: all 0.3s ease;';
+
         postEl.innerHTML = `
-          <div class="post-title"><a href="/feed/post/${post.id}">${post.title}</a></div>
-          <div class="post-meta">
+          <div class="post-title" style="margin-bottom: 0.5rem;">
+            <a href="/feed/post/${post.id}" style="color: var(--terminal-green); text-decoration: none; font-size: 1.1rem;">${post.title || 'Untitled Post'}</a>
+          </div>
+          <div class="post-meta" style="font-size: 0.9rem; color: var(--terminal-dim-green);">
             <span class="post-date">${new Date(post.created_at).toLocaleString()}</span>
-            ${post.is_encrypted ? '<span class="post-encrypted blink-text">ENCRYPTED</span>' : ''}
+            ${post.is_encrypted ? '<span class="post-encrypted" style="margin-left: 1rem; color: var(--terminal-red);">ENCRYPTED</span>' : ''}
           </div>
         `;
+        
+        postEl.addEventListener('mouseenter', () => {
+          postEl.style.borderLeftColor = 'var(--terminal-green)';
+          postEl.style.backgroundColor = 'rgba(138, 43, 226, 0.1)';
+        });
+        
+        postEl.addEventListener('mouseleave', () => {
+          postEl.style.borderLeftColor = 'var(--terminal-dim-green)';
+          postEl.style.backgroundColor = 'transparent';
+        });
+        
         userPostsContentEl.appendChild(postEl);
       });
     } else {
-      userPostsContentEl.innerHTML = '<div class="no-activity blink-text">NO POSTS FOUND IN ARCHIVE.</div>';
-    }
-
-    // Function to apply theme templates
-    function applyThemeTemplate(templateName) {
-      const themeStyleEl = document.getElementById('profile-view-theme-template');
-
-      switch(templateName) {
-        case 'cyberpunk':
-          themeStyleEl.textContent = `
-            body {
-              --terminal-green: #00ffff;
-              --terminal-dim-green: #00aaaa;
-              --glow-color: rgba(0, 255, 255, 0.5);
-            }
-            .profile-view-header {
-              border-color: rgba(0, 255, 255, 0.2);
-            }
-            .profile-view-avatar {
-              border-color: #00ffff;
-            }
-            .profile-view-info h3 {
-              color: #00ffff;
-              text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
-            }
-            .profile-view-section .section-title {
-              color: #00ffff;
-            }
-            .post-title a {
-              color: #00ffff;
-            }
-          `;
-          break;
-        case 'glitchcore':
-          themeStyleEl.textContent = `
-            body {
-              --terminal-green: #ff00aa;
-              --terminal-dim-green: #cc0088;
-              --glow-color: rgba(255, 0, 170, 0.5);
-            }
-            .profile-view-header {
-              border-color: rgba(255, 0, 170, 0.2);
-              overflow: visible;
-            }
-            .profile-view-header::before {
-              content: '';
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background: linear-gradient(45deg, rgba(255,0,170,0.2), transparent);
-              z-index: 1;
-              mix-blend-mode: overlay;
-            }
-            .profile-view-avatar {
-              border-color: #ff00aa;
-              overflow: visible;
-            }
-            .profile-view-avatar::after {
-              content: '';
-              position: absolute;
-              top: -3px;
-              left: -3px;
-              width: calc(100% + 6px);
-              height: calc(100% + 6px);
-              border-radius: 50%;
-              border: 1px solid #ff00aa;
-              animation: pulse 3s infinite;
-            }
-            .profile-view-info h3 {
-              color: #ff00aa;
-              text-shadow: 2px 2px 0 rgba(0,255,255,0.5), -2px -2px 0 rgba(255,0,0,0.5);
-            }
-            .profile-view-section .section-title {
-              color: #ff00aa;
-            }
-            @keyframes pulse {
-              0% { transform: scale(1); opacity: 1; }
-              50% { transform: scale(1.05); opacity: 0.5; }
-              100% { transform: scale(1); opacity: 1; }
-            }
-          `;
-          break;
-        case 'vaporwave':
-          themeStyleEl.textContent = `
-            body {
-              --terminal-green: #ff00ff;
-              --terminal-dim-green: #cc00cc;
-              --glow-color: rgba(255, 0, 255, 0.5);
-            }
-            .profile-view-header {
-              border-color: rgba(255, 0, 255, 0.2);
-            }
-            .profile-view-background {
-              filter: brightness(70%) saturate(150%) hue-rotate(210deg);
-            }
-            .profile-view-avatar {
-              border-color: #ff00ff;
-            }
-            .profile-view-info h3 {
-              color: #ff00ff;
-              font-family: 'VT323', serif;
-              letter-spacing: 0.1em;
-            }
-            .profile-view-section {
-              border-bottom: 1px solid rgba(255, 0, 255, 0.2);
-            }
-            .profile-view-section .section-title {
-              color: #ff00ff;
-              font-family: 'VT323', serif;
-              letter-spacing: 0.1em;
-            }
-          `;
-          break;
-        case 'darkweb':
-          themeStyleEl.textContent = `
-            body {
-              --terminal-green: #00ff00;
-              --terminal-dim-green: #00aa00;
-              --glow-color: rgba(0, 255, 0, 0.5);
-              --terminal-bg: #000000;
-            }
-            .profile-view-header {
-              border-color: #222222;
-            }
-            .profile-view-background {
-              filter: grayscale(100%) brightness(30%) contrast(120%);
-            }
-            .profile-view-avatar {
-              border-color: #00ff00;
-            }
-            .profile-view-info h3 {
-              color: #00ff00;
-              font-family: 'Courier New', monospace;
-            }
-            .profile-view-section {
-              border-bottom: 1px solid #222222;
-            }
-            .profile-view-section .section-title {
-              color: #00ff00;
-              font-family: 'Courier New', monospace;
-            }
-            .section-content {
-              color: #aaaaaa;
-            }
-          `;
-          break;
-        case 'matrix':
-          themeStyleEl.textContent = `
-            body {
-              --terminal-green: #00ff00;
-              --terminal-dim-green: #00aa00;
-              --glow-color: rgba(0, 255, 0, 0.5);
-              --terminal-bg: #000000;
-            }
-            .profile-view-header {
-              border-color: rgba(0, 255, 0, 0.2);
-              position: relative;
-              overflow: hidden;
-            }
-            .profile-view-header::before {
-              content: '';
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%);
-              z-index: 2;
-            }
-            .profile-view-header::after {
-              content: '';
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background-image: url('/images/matrix-code.png');
-              opacity: 0.2;
-              animation: scroll 20s linear infinite;
-              z-index: 1;
-            }
-            @keyframes scroll {
-              0% { background-position: 0 0; }
-              100% { background-position: 0 1000px; }
-            }
-            .profile-view-avatar {
-              border-color: #00ff00;
-              z-index: 3;
-            }
-            .profile-view-info {
-              z-index: 3;
-            }
-            .profile-view-info h3 {
-              color: #00ff00;
-              font-family: 'Courier New', monospace;
-              text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-            }
-            .profile-view-section .section-title {
-              color: #00ff00;
-              font-family: 'Courier New', monospace;
-            }
-          `;
-          break;
-        default:
-          themeStyleEl.textContent = ''; // Default theme (no custom styles)
-      }
-    }
-
-    // Enhanced window loading function with Win98 icons
-    function loadProfileWindows() {
-      try {
-        console.log('Windows 98 profile section initialized');
-        if (typeof Win98WindowManager !== 'undefined') {
-          window.windowManager = new Win98WindowManager('profile-windows');
-
-          // Add desktop icons to the Windows 98 desktop
-          const desktopIconsContainer = document.createElement('div');
-          desktopIconsContainer.className = 'win98-desktop-icons';
-
-          // Sample icons
-          const icons = [
-            { name: 'My Computer', img: '/images/win98-icons/mycomputer.png' },
-            { name: 'Network', img: '/images/win98-icons/network.png' },
-            { name: 'Recycle Bin', img: '/images/win98-icons/recyclefull.png' },
-            { name: 'My Documents', img: '/images/win98-icons/mydocuments.png' },
-            { name: 'Internet Explorer', img: '/images/win98-icons/ie.png' },
-            { name: 'README.TXT', img: '/images/win98-icons/notepad.png' }
-          ];
-
-          // Create desktop icons
-          icons.forEach(icon => {
-            const iconDiv = document.createElement('div');
-            iconDiv.className = 'win98-desktop-icon';
-            iconDiv.innerHTML = `
-              <img src="${icon.img || '/images/win98-icons/default.png'}" class="win98-desktop-icon-img">
-              <div class="win98-desktop-icon-label">${icon.name}</div>
-            `;
-            desktopIconsContainer.appendChild(iconDiv);
-          });
-
-          document.getElementById('profile-windows').appendChild(desktopIconsContainer);
-
-        } else {
-          console.log('Win98WindowManager not defined yet');
-        }
-      } catch (e) {
-        console.error('Error loading windows:', e);
-      }
+      userPostsContentEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO POSTS FOUND IN ARCHIVE.</span>';
     }
 
     // Toggle glitch effects
     document.getElementById('toggle-glitch').addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.toggle('glitch-active');
-      // Store preference in localStorage
       localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
     });
 
@@ -1038,7 +337,7 @@
       document.body.classList.add('glitch-active');
     }
 
-    // Note: Sidebar navigation is now handled by sidebar-manager.js
+    console.log('Profile view page initialized successfully');
   </script>
 </body>
 </html>
