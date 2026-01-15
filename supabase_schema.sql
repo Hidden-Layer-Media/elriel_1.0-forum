@@ -482,3 +482,105 @@ CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE
 -- Similar trigger for profile_containers if needed
 CREATE TRIGGER update_profile_containers_updated_at BEFORE UPDATE
     ON public.profile_containers FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+-- Comments table for posts
+CREATE TABLE IF NOT EXISTS public.post_comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER NOT NULL REFERENCES public.posts(id) ON DELETE CASCADE,
+  user_id INTEGER NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Enable RLS on post_comments table
+ALTER TABLE public.post_comments ENABLE ROW LEVEL SECURITY;
+
+-- Policies for post_comments
+CREATE POLICY "Allow public access to post comments"
+  ON public.post_comments FOR SELECT
+  USING (true);
+
+CREATE POLICY "Allow authenticated users to create comments"
+  ON public.post_comments FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Allow users to update their own comments"
+  ON public.post_comments FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Allow users to delete their own comments"
+  ON public.post_comments FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+-- For development only - replace with proper auth later
+CREATE POLICY "Temporary allow all operations on post comments"
+  ON public.post_comments FOR ALL
+  USING (true);
+
+-- Likes table for posts
+CREATE TABLE IF NOT EXISTS public.post_likes (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER NOT NULL REFERENCES public.posts(id) ON DELETE CASCADE,
+  user_id INTEGER NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  type TEXT NOT NULL CHECK (type IN ('like', 'dislike')),
+  created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(post_id, user_id)
+);
+
+-- Enable RLS on post_likes table
+ALTER TABLE public.post_likes ENABLE ROW LEVEL SECURITY;
+
+-- Policies for post_likes
+CREATE POLICY "Allow public access to post likes"
+  ON public.post_likes FOR SELECT
+  USING (true);
+
+CREATE POLICY "Allow authenticated users to manage likes"
+  ON public.post_likes FOR ALL
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- For development only - replace with proper auth later
+CREATE POLICY "Temporary allow all operations on post likes"
+  ON public.post_likes FOR ALL
+  USING (true);
+
+-- Add vote columns to forum_topics
+ALTER TABLE public.forum_topics
+ADD COLUMN IF NOT EXISTS upvotes INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS downvotes INTEGER DEFAULT 0;
+
+-- Votes table for forum topics
+CREATE TABLE IF NOT EXISTS public.forum_topic_votes (
+  id SERIAL PRIMARY KEY,
+  topic_id INTEGER NOT NULL REFERENCES public.forum_topics(id) ON DELETE CASCADE,
+  user_id INTEGER NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  vote_type TEXT NOT NULL CHECK (vote_type IN ('up', 'down')),
+  created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(topic_id, user_id)
+);
+
+-- Enable RLS on forum_topic_votes table
+ALTER TABLE public.forum_topic_votes ENABLE ROW LEVEL SECURITY;
+
+-- Policies for forum_topic_votes
+CREATE POLICY "Allow public access to forum topic votes"
+  ON public.forum_topic_votes FOR SELECT
+  USING (true);
+
+CREATE POLICY "Allow authenticated users to manage votes"
+  ON public.forum_topic_votes FOR ALL
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- For development only - replace with proper auth later
+CREATE POLICY "Temporary allow all operations on forum topic votes"
+  ON public.forum_topic_votes FOR ALL
+  USING (true);

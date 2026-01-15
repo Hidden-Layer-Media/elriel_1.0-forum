@@ -249,18 +249,67 @@ router.get('/post/:id', async (req, res) => {
       district_name: profileData.districts?.name || null
     };
     
+    // Get comments
+    const { data: comments, error: commentsError } = await supabase
+      .from('post_comments')
+      .select(`
+        *,
+        users:user_id (username)
+      `)
+      .eq('post_id', id)
+      .order('created_at', { ascending: true });
+
+    if (commentsError) {
+      throw commentsError;
+    }
+
+    const formattedComments = comments.map(comment => ({
+      ...comment,
+      username: comment.users.username
+    }));
+
+    // Get likes count
+    const { data: likes, error: likesError } = await supabase
+      .from('post_likes')
+      .select('type')
+      .eq('post_id', id);
+
+    if (likesError) {
+      throw likesError;
+    }
+
+    const likeCount = likes.filter(l => l.type === 'like').length;
+    const dislikeCount = likes.filter(l => l.type === 'dislike').length;
+
+    // Check if current user liked
+    let userLike = null;
+    if (req.session.user) {
+      const { data: userLikeData } = await supabase
+        .from('post_likes')
+        .select('type')
+        .eq('post_id', id)
+        .eq('user_id', req.session.user.id)
+        .single();
+
+      userLike = userLikeData?.type || null;
+    }
+
     // Pass data to the frontend
     const data = {
       post: formattedPost,
       profile,
+      comments: formattedComments,
+      likes: likeCount,
+      dislikes: dislikeCount,
+      userLike,
       user: req.session.user || null,
       isOwner: req.session.user && req.session.user.id === post.user_id
     };
-    
+
     // Inject data into the HTML
     let html = fs.readFileSync(path.join(__dirname, '../views/feed/view-post.html'), 'utf8');
     html = html.replace('__DATA__', JSON.stringify(data));
-    
+
     res.send(html);
   } catch (err) {
     console.error('Error viewing post:', err);
@@ -316,14 +365,14 @@ router.post('/check-key/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { key } = req.body;
-    
+
     if (!key) {
-      return res.status(400).json({ 
-        error: 'Invalid input', 
-        message: 'Encryption key is required.' 
+      return res.status(400).json({
+        error: 'Invalid input',
+        message: 'Encryption key is required.'
       });
     }
-    
+
     // Check if key is valid
     const { data: post, error } = await supabase
       .from('posts')
@@ -331,31 +380,315 @@ router.post('/check-key/:id', async (req, res) => {
       .eq('id', id)
       .eq('is_encrypted', 1)
       .single();
-    
+
     if (error || !post) {
-      return res.status(404).json({ 
-        error: 'Post not found', 
-        message: 'The requested post does not exist or is not encrypted.' 
+      return res.status(404).json({
+        error: 'Post not found',
+        message: 'The requested post does not exist or is not encrypted.'
       });
     }
-    
+
     if (post.encryption_key !== key) {
-      return res.status(401).json({ 
-        error: 'Invalid key', 
-        message: 'The provided encryption key is invalid.' 
+      return res.status(401).json({
+        error: 'Invalid key',
+        message: 'The provided encryption key is invalid.'
       });
     }
-    
+
     // Key is valid, redirect to post with key
-    res.json({ 
-      success: true, 
-      redirectUrl: `/feed/post/${id}?key=${key}` 
+    res.json({
+      success: true,
+      redirectUrl: `/feed/post/${id}?key=${key}`
     });
   } catch (err) {
     console.error('Check encryption key error:', err);
-    res.status(500).json({ 
-      error: 'System error', 
-      message: 'Terminal connection unstable. Try again later.' 
+    res.status(500).json({
+      error: 'System error',
+      message: 'Terminal connection unstable. Try again later.'
+    });
+  }
+});
+
+// Get comments for a post
+router.get('/post/:id/comments', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data: comments, error } = await supabase
+      .from('post_comments')
+      .select(`
+        *,
+        users:user_id (username)
+      `)
+      .eq('post_id', id)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    const formattedComments = comments.map(comment => ({
+      ...comment,
+      username: comment.users.username
+    }));
+
+    res.json({ comments: formattedComments });
+  } catch (err) {
+    console.error('Error getting comments:', err);
+    res.status(500).json({
+      error: 'System error',
+      message: 'Terminal connection unstable. Try again later.'
+    });
+  }
+});
+
+// Add comment to a post
+router.post('/post/:id/comments', isAuthenticated, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({
+        error: 'Invalid input',
+        message: 'Comment content is required.'
+      });
+    }
+
+    // Check if post exists
+    const { data: post, error: postError } = await supabase
+      .from('posts')
+      .select('id')
+      .eq('id', id)
+      .single();
+
+    if (postError || !post) {
+      return res.status(404).json({
+        error: 'Post not found',
+        message: 'The requested post does not exist.'
+      });
+    }
+
+    const { data: comment, error } = await supabase
+      .from('post_comments')
+      .insert({
+        post_id: id,
+        user_id: req.session.user.id,
+        content: content.trim()
+      })
+      .select(`
+        *,
+        users:user_id (username)
+      `)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    const formattedComment = {
+      ...comment,
+      username: comment.users.username
+    };
+
+    res.status(201).json({
+      success: true,
+      comment: formattedComment
+    });
+  } catch (err) {
+    console.error('Error adding comment:', err);
+    res.status(500).json({
+      error: 'System error',
+      message: 'Terminal connection unstable. Try again later.'
+    });
+  }
+});
+
+// Delete comment
+router.delete('/post/:postId/comments/:commentId', isAuthenticated, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+
+    // Check if comment exists and belongs to user
+    const { data: comment, error: getError } = await supabase
+      .from('post_comments')
+      .select('*')
+      .eq('id', commentId)
+      .eq('user_id', req.session.user.id)
+      .single();
+
+    if (getError || !comment) {
+      return res.status(404).json({
+        error: 'Comment not found',
+        message: 'The requested comment does not exist or does not belong to you.'
+      });
+    }
+
+    // Delete comment
+    const { error: deleteError } = await supabase
+      .from('post_comments')
+      .delete()
+      .eq('id', commentId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    res.json({
+      success: true,
+      message: 'Comment deleted successfully'
+    });
+  } catch (err) {
+    console.error('Error deleting comment:', err);
+    res.status(500).json({
+      error: 'System error',
+      message: 'Terminal connection unstable. Try again later.'
+    });
+  }
+});
+
+// Like or dislike a post
+router.post('/post/:id/like', isAuthenticated, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { type } = req.body; // 'like' or 'dislike'
+
+    if (!['like', 'dislike'].includes(type)) {
+      return res.status(400).json({
+        error: 'Invalid input',
+        message: 'Type must be like or dislike.'
+      });
+    }
+
+    // Check if post exists
+    const { data: post, error: postError } = await supabase
+      .from('posts')
+      .select('id')
+      .eq('id', id)
+      .single();
+
+    if (postError || !post) {
+      return res.status(404).json({
+        error: 'Post not found',
+        message: 'The requested post does not exist.'
+      });
+    }
+
+    // Check if user already liked/disliked
+    const { data: existingLike, error: likeError } = await supabase
+      .from('post_likes')
+      .select('*')
+      .eq('post_id', id)
+      .eq('user_id', req.session.user.id)
+      .single();
+
+    if (likeError && likeError.code !== 'PGRST116') { // PGRST116 is "not found"
+      throw likeError;
+    }
+
+    if (existingLike) {
+      if (existingLike.type === type) {
+        // Remove the like/dislike
+        const { error: deleteError } = await supabase
+          .from('post_likes')
+          .delete()
+          .eq('id', existingLike.id);
+
+        if (deleteError) {
+          throw deleteError;
+        }
+
+        res.json({
+          success: true,
+          action: 'removed',
+          type
+        });
+      } else {
+        // Update to new type
+        const { error: updateError } = await supabase
+          .from('post_likes')
+          .update({ type })
+          .eq('id', existingLike.id);
+
+        if (updateError) {
+          throw updateError;
+        }
+
+        res.json({
+          success: true,
+          action: 'updated',
+          type
+        });
+      }
+    } else {
+      // Add new like/dislike
+      const { error: insertError } = await supabase
+        .from('post_likes')
+        .insert({
+          post_id: id,
+          user_id: req.session.user.id,
+          type
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      res.json({
+        success: true,
+        action: 'added',
+        type
+      });
+    }
+  } catch (err) {
+    console.error('Error liking post:', err);
+    res.status(500).json({
+      error: 'System error',
+      message: 'Terminal connection unstable. Try again later.'
+    });
+  }
+});
+
+// Get likes count for a post
+router.get('/post/:id/likes', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data: likes, error } = await supabase
+      .from('post_likes')
+      .select('type')
+      .eq('post_id', id);
+
+    if (error) {
+      throw error;
+    }
+
+    const likeCount = likes.filter(l => l.type === 'like').length;
+    const dislikeCount = likes.filter(l => l.type === 'dislike').length;
+
+    // Check if current user liked
+    let userLike = null;
+    if (req.session.user) {
+      const { data: userLikeData } = await supabase
+        .from('post_likes')
+        .select('type')
+        .eq('post_id', id)
+        .eq('user_id', req.session.user.id)
+        .single();
+
+      userLike = userLikeData?.type || null;
+    }
+
+    res.json({
+      likes: likeCount,
+      dislikes: dislikeCount,
+      userLike
+    });
+  } catch (err) {
+    console.error('Error getting likes:', err);
+    res.status(500).json({
+      error: 'System error',
+      message: 'Terminal connection unstable. Try again later.'
     });
   }
 });
