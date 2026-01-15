@@ -4,18 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PROFILE | ELRIEL</title>
-  <link rel="stylesheet" href="/css/win98.css">
-  <link rel="stylesheet" href="/css/win98-profile.css">
-  <script src="/js/glitch.js" defer></script>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
+  <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
+  <script src="/js/performance-fixes.js" defer></script>
 </head>
-<body>
+<body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -25,7 +43,10 @@
     </header>
 
     <div class="content-wrapper">
-      <nav class="sidebar">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
+      <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
           <ul class="nav-links">
@@ -33,6 +54,7 @@
             <li><a href="/feed/bleedstream">BLEEDSTREAM</a></li>
             <li><a href="/glyph/crucible">GLYPH CRUCIBLE</a></li>
             <li><a href="/whisper/board">WHISPERBOARD</a></li>
+            <li><a href="/forum/scrapyard">SCRAPYARD</a></li>
           </ul>
         </div>
         <div class="nav-section">
@@ -53,119 +75,87 @@
       </nav>
 
       <main class="main-content">
-        <% if (typeof flash !== 'undefined') { %>
-          <% if (flash.message) { %><div class="flash-message" style="color: green; margin-bottom: 1rem;"><%= flash.message %></div><% } %>
-          <% if (flash.error) { %><div class="flash-error" style="color: red; margin-bottom: 1rem;"><%= flash.error %></div><% } %>
-        <% } %>
-        <section class="win98-window profile-panel">
-          <div class="win98-titlebar">
-            <div class="win98-titlebar-text">USER PROFILE: <span id="profile-username"></span></div>
-            <div class="win98-window-controls">
-              <div class="win98-window-control">_</div>
-              <div class="win98-window-control">□</div>
-              <div class="win98-window-control">×</div>
-            </div>
+        <section class="panel profile-panel">
+          <div class="scanner-line"></div>
+          <div class="panel-header">
+            <h2>USER PROFILE: <span id="profile-username"></span></h2>
+            <div class="status-indicator">ACTIVE</div>
           </div>
-          <div class="win98-window-content">
-          <div class="profile-content">
-            <!-- Profile navigation bar -->
-            <div class="profile-nav-bar">
-              <a href="#profile" class="profile-nav-item active">PROFILE</a>
-              <a href="#posts" class="profile-nav-item">POSTS</a>
-              <a href="#activity" class="profile-nav-item">ACTIVITY</a>
-              <a href="#glyphs" class="profile-nav-item">GLYPHS</a>
-            </div>
-            <div class="profile-header">
-              <div class="profile-background" id="profile-background">
-                <!-- Background image will be injected here -->
-              </div>
-              <div class="profile-avatar">
-                <!-- Placeholder for avatar -->
-                <div class="default-avatar"></div>
-              </div>
-              <div class="profile-info">
-                <h3 id="profile-username-large"></h3>
-                <div class="profile-district" id="profile-district"></div>
-              </div>
-            </div>
-            
-            <div class="profile-details">
-              <div class="profile-section">
-                <div class="section-title">STATUS:</div>
-                <div class="section-content" id="profile-status-text"></div>
+          <div class="panel-content">
+            <div class="profile-content">
+              <!-- Profile navigation bar -->
+              <div class="profile-nav-bar">
+                <a href="#profile" class="profile-nav-item active">PROFILE</a>
+                <a href="#posts" class="profile-nav-item">POSTS</a>
+                <a href="#activity" class="profile-nav-item">ACTIVITY</a>
+                <a href="#glyphs" class="profile-nav-item">GLYPHS</a>
               </div>
               
-              <div class="profile-section">
-                <div class="section-title">PROFILE SIGIL:</div>
-                <div class="section-content" id="profile-glyph">
-                  <!-- Profile glyph will be injected here -->
+              <div class="profile-header">
+                <div class="profile-background" id="profile-background">
+                  <!-- Background image will be injected here -->
+                </div>
+                <div class="profile-avatar" id="profile-avatar">
+                  <!-- Avatar will be injected here -->
+                </div>
+                <div class="profile-info">
+                  <h3 id="profile-username-large"></h3>
+                  <div class="profile-status" id="profile-status"></div>
+                  <div class="profile-district" id="profile-district"></div>
                 </div>
               </div>
               
-              <div class="profile-section">
-                <div class="section-title">CUSTOM CODE:</div>
-                <div class="section-content">
-                  <style id="profile-custom-css"></style>
-                  <div id="profile-custom-html"></div>
-                </div>
-              </div>
-              
-              <!-- Profile action buttons -->
-              <div class="profile-section">
-                <div class="section-title">PROFILE ACTIONS:</div>
-                <div class="section-content">
-                  <a href="/profile/edit" class="edit-profile-btn">EDIT PROFILE</a>
-                  
-                  <div class="action-buttons">
-                    <a href="/profile/edit#background" class="action-button">CHANGE BACKGROUND</a>
-                    <a href="/profile/edit#glyph" class="action-button">CHANGE SIGIL</a>
-                    <a href="/glyph/crucible" class="action-button">GLYPH CRUCIBLE</a>
-                  </div>
-                </div>
-    
-                <!-- Layout Preview -->
+              <div class="profile-details">
                 <div class="profile-section">
-                  <div class="section-title">LAYOUT PREVIEW:</div>
+                  <div class="section-title">PROFILE SIGIL:</div>
+                  <div class="section-content" id="profile-glyph">
+                    <!-- Profile glyph will be injected here -->
+                  </div>
+                </div>
+                
+                <div class="profile-section">
+                  <div class="section-title">BIO:</div>
+                  <div class="section-content" id="profile-bio">
+                    <!-- Bio will be injected here -->
+                  </div>
+                </div>
+                
+                <div class="profile-section">
+                  <div class="section-title">CUSTOM CODE:</div>
                   <div class="section-content">
-                    <div class="preview-container" style="display:flex; gap:1rem; border:1px dashed var(--terminal-green); padding:1rem;">
-                      <div class="preview-sidebar" style="flex:0 0 150px; border-right:1px solid var(--terminal-green); padding-right:1rem;">
-                        <div class="preview-item">Avatar: <%= profile.avatar_url ? 'Uploaded' : 'Default' %></div>
-                        <div class="preview-item">Bio: <%= (profile.bio || 'No bio').substring(0, 30) + '...' %></div>
-                        <% if (profile.sidebar_config && Object.keys(profile.sidebar_config).length > 0) { %><div class="preview-item">Sidebar Widget: Configured</div><% } else { %><div class="preview-item">Sidebar Widget: None</div><% } %>
-                      </div>
-                      <div class="preview-main" style="flex:1;">
-                        <% if (profile.layout_type === 'one-column') { %>
-                          <div class="preview-one-column">Main (Markdown): <%= profile.main_content && profile.main_content.length > 0 ? 'Set' : 'Empty' %></div>
-                        <% } else { %>
-                          <div style="display:flex; gap:1rem;">
-                            <div class="preview-left" style="flex:1; border-right:1px solid var(--terminal-green);">Left Zone: <%= (groupedContainers && groupedContainers.mainLeft ? groupedContainers.mainLeft.length : 0) %> widgets</div>
-                            <div class="preview-right" style="flex:1;">Right Zone: <%= (groupedContainers && groupedContainers.mainRight ? groupedContainers.mainRight.length : 0) %> widgets</div>
-                          </div>
-                        <% } %>
-                      </div>
+                    <style id="profile-custom-css"></style>
+                    <div id="profile-custom-html"></div>
+                  </div>
+                </div>
+                
+                <!-- Profile action buttons -->
+                <div class="profile-section">
+                  <div class="section-title">PROFILE ACTIONS:</div>
+                  <div class="section-content">
+                    <a href="/profile/edit" class="button edit-profile-btn">EDIT PROFILE</a>
+                    
+                    <div class="action-buttons" style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                      <a href="/profile/edit#background" class="button action-button">CHANGE BACKGROUND</a>
+                      <a href="/profile/edit#glyph" class="button action-button">CHANGE SIGIL</a>
+                      <a href="/glyph/crucible" class="button action-button">GLYPH CRUCIBLE</a>
                     </div>
-                    <p style="margin-top:0.5rem;"><a href="/profile/edit">Edit Layout</a> | <a href="/profile/view-enhanced">View Profile</a></p>
                   </div>
                 </div>
               </div>
-              </div>
-          </div>
+            </div>
           </div>
         </section>
 
-        <section class="win98-window user-posts-panel">
-          <div class="win98-titlebar">
-            <div class="win98-titlebar-text">RECENT POSTS</div>
-            <div class="win98-window-controls">
-              <div class="win98-window-control">_</div>
-              <div class="win98-window-control">□</div>
-              <div class="win98-window-control">×</div>
+        <section class="panel user-posts-panel">
+          <div class="scanner-line"></div>
+          <div class="panel-header">
+            <h2>RECENT POSTS</h2>
+            <div class="status-indicator">ARCHIVE</div>
+          </div>
+          <div class="panel-content">
+            <div class="user-posts-content" id="user-posts-content">
+              <!-- User posts will be injected here -->
             </div>
-          </div>
-          <div class="win98-window-content">
-          <div class="user-posts-content" id="user-posts-content">
-            <!-- User posts will be injected here -->
-          </div>
           </div>
         </section>
       </main>
@@ -183,12 +173,25 @@
 
   <script>
     // Inject data from server
-  const data = __DATA__;
-    const profile = data.profile;
-    const groupedContainers = data.groupedContainers || {sidebar: [], mainLeft: [], mainRight: []};
-    const user = data.user;
-    const glyph = data.glyph;
-    const posts = data.posts;
+    console.log('Profile dashboard loading...');
+    let data, profile, user, glyph, posts, groupedContainers;
+    try {
+      data = __DATA__;
+      profile = data.profile || {};
+      user = data.user;
+      glyph = data.glyph;
+      posts = data.posts || [];
+      groupedContainers = data.groupedContainers || {sidebar: [], mainLeft: [], mainRight: []};
+    } catch (err) {
+      console.error('Error accessing __DATA__:', err);
+      // Fallback to defaults
+      data = { profile: {}, user: null, glyph: null, posts: [], groupedContainers: {} };
+      profile = {};
+      user = null;
+      glyph = null;
+      posts = [];
+      groupedContainers = {sidebar: [], mainLeft: [], mainRight: []};
+    }
     
     // Update user status in header
     const userStatusEl = document.getElementById('user-status');
@@ -197,33 +200,43 @@
         <div class="logged-in">
           <span class="username">${user.username}</span>
           <div class="user-links">
-            <a href="/profile" class="win98-btn">PROFILE</a>
-            <a href="/auth/logout" class="win98-btn">LOGOUT</a>
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
         </div>
       `;
     } else {
       userStatusEl.innerHTML = `
         <div class="logged-out">
-          <a href="/auth/login" class="win98-btn login-btn">LOGIN</a>
-          <a href="/auth/register" class="win98-btn register-btn">REGISTER</a>
+          <a href="/auth/login" class="button login-btn">LOGIN</a>
+          <a href="/auth/register" class="button register-btn">REGISTER</a>
         </div>
       `;
     }
     
+    // Get username from profile object
+    const username = profile.users ? profile.users.username : (user ? user.username : 'Unknown');
+    
     // Update profile details
-    document.getElementById('profile-username').textContent = profile.username;
-    document.getElementById('profile-username-large').textContent = profile.username;
-    document.getElementById('profile-status').textContent = profile.status;
-    document.getElementById('profile-status-text').textContent = profile.status;
+    document.getElementById('profile-username').textContent = username;
+    document.getElementById('profile-username-large').textContent = username;
+    document.getElementById('profile-status').textContent = profile.status || 'No status set';
     document.getElementById('profile-district').textContent = `DISTRICT: ${profile.district_name || 'UNKNOWN'}`;
     
     // Set background image
     const profileBackgroundEl = document.getElementById('profile-background');
     if (profile.background_image) {
       profileBackgroundEl.style.backgroundImage = `url(${profile.background_image})`;
-      profileBackgroundEl.classList.add('glitch-image');
-      profileBackgroundEl.setAttribute('data-image', profile.background_image);
+      profileBackgroundEl.style.backgroundSize = 'cover';
+      profileBackgroundEl.style.backgroundPosition = 'center';
+    }
+    
+    // Set avatar
+    const profileAvatarEl = document.getElementById('profile-avatar');
+    if (profile.avatar_url) {
+      profileAvatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="${username}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+    } else {
+      profileAvatarEl.innerHTML = `<div style="width:100%;height:100%;background:var(--bg-inset);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--terminal-green);">${username.charAt(0).toUpperCase()}</div>`;
     }
     
     // Set profile glyph
@@ -231,12 +244,25 @@
     if (glyph && glyph.svg_data) {
       profileGlyphEl.innerHTML = glyph.svg_data;
     } else {
-      profileGlyphEl.innerHTML = '<span>NO SIGIL SET</span>';
+      profileGlyphEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO SIGIL SET</span>';
+    }
+    
+    // Set bio
+    const profileBioEl = document.getElementById('profile-bio');
+    if (profile.bio) {
+      profileBioEl.textContent = profile.bio;
+    } else {
+      profileBioEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO BIO SET</span>';
     }
     
     // Inject custom CSS and HTML
     document.getElementById('profile-custom-css').textContent = profile.custom_css || '';
-    document.getElementById('profile-custom-html').innerHTML = profile.custom_html || '<span>NO CUSTOM CODE</span>';
+    const customHtmlEl = document.getElementById('profile-custom-html');
+    if (profile.custom_html) {
+      customHtmlEl.innerHTML = profile.custom_html;
+    } else {
+      customHtmlEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO CUSTOM CODE</span>';
+    }
     
     // Add profile navigation functionality
     document.querySelectorAll('.profile-nav-item').forEach(navItem => {
@@ -252,10 +278,7 @@
         // Get the target section from href
         const targetSection = this.getAttribute('href').substring(1);
         
-        // In a full implementation, you would show/hide sections here
-        console.log(`Navigating to profile section: ${targetSection}`);
-        
-        // For now, just scroll to appropriate section if it exists
+        // Section map for scrolling
         const sectionMap = {
           'profile': '.profile-details',
           'posts': '.user-posts-panel',
@@ -274,28 +297,48 @@
     
     // Display user posts
     const userPostsContentEl = document.getElementById('user-posts-content');
-    if (posts.length > 0) {
+    if (posts && posts.length > 0) {
+      userPostsContentEl.innerHTML = '';
       posts.forEach(post => {
         const postEl = document.createElement('div');
         postEl.className = 'user-post-item';
-        postEl.innerHTML = `
-          <div class="post-title"><a href="/feed/post/${post.id}">${post.title}</a></div>
-          <div class="post-meta">
-            <span class="post-date">${new Date(post.created_at).toLocaleString()}</span>
-            ${post.is_encrypted ? '<span class="post-encrypted">ENCRYPTED</span>' : ''}
-          </div>
+        postEl.style.cssText = 'padding: 1rem; border-bottom: 1px solid var(--terminal-dim-green); margin-bottom: 0.5rem;';
+        
+        const postTitle = document.createElement('div');
+        postTitle.className = 'post-title';
+        postTitle.style.cssText = 'margin-bottom: 0.5rem;';
+        postTitle.innerHTML = `<a href="/feed/post/${post.id}" style="color: var(--terminal-green); text-decoration: none;">${post.title || 'Untitled Post'}</a>`;
+        
+        const postMeta = document.createElement('div');
+        postMeta.className = 'post-meta';
+        postMeta.style.cssText = 'font-size: 0.9rem; color: var(--terminal-dim-green);';
+        postMeta.innerHTML = `
+          <span class="post-date">${new Date(post.created_at).toLocaleString()}</span>
+          ${post.is_encrypted ? '<span class="post-encrypted" style="margin-left: 1rem; color: var(--terminal-red);">ENCRYPTED</span>' : ''}
         `;
+        
+        postEl.appendChild(postTitle);
+        postEl.appendChild(postMeta);
         userPostsContentEl.appendChild(postEl);
       });
     } else {
-      userPostsContentEl.innerHTML = '<span>NO POSTS FOUND IN ARCHIVE.</span>';
+      userPostsContentEl.innerHTML = '<span style="color: var(--terminal-dim-green);">NO POSTS FOUND IN ARCHIVE.</span>';
     }
     
     // Toggle glitch effects
     document.getElementById('toggle-glitch').addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
     });
+    
+    // Check if glitch effects were previously enabled
+    const glitchActive = localStorage.getItem('glitch-active');
+    if (glitchActive === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+    
+    console.log('Profile dashboard initialized successfully');
   </script>
 </body>
 </html>

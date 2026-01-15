@@ -1,28 +1,45 @@
-<![CDATA[<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDIT PROFILE | ELRIEL</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/glitch.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Unified Stylesheets -->
+  <link rel="stylesheet" href="/css/cyberpunk-terminal.css">
   <link rel="stylesheet" href="/css/profile.css">
-  <link rel="stylesheet" href="/css/win98.css">
-  <script src="/js/glitch.js" defer></script>
-  <script src="/js/win98.js" defer></script>
+  <link rel="stylesheet" href="/css/responsive-fixes.css">
+  <link rel="stylesheet" href="/css/bleedstream-sidebar.css">
+  
+  <!-- Core Scripts -->
+  <script src="/js/error-logger.js" defer></script>
+  <script src="/js/accessibility.js" defer></script>
+  <script src="/js/navigation-debug.js" defer></script>
+  <script src="/js/mobile-enhancements.js" defer></script>
+  <script src="/js/sidebar-manager.js" defer></script>
+  <script src="/js/performance-fixes.js" defer></script>
+  
+  <!-- Profile-specific Scripts -->
   <script src="/js/profile-themes.js" defer></script>
   <script src="/js/profile-widgets.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/marked@latest/lib/marked.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
 </head>
 <body class="terminal">
+  <!-- Screen Effects -->
   <div class="noise-overlay"></div>
   <div class="scan-lines"></div>
+  <div class="crt-effect"></div>
+  
+  <!-- Main Container -->
   <div class="container">
     <header class="main-header">
       <div class="logo">
         <h1 class="glitch" data-text="ELRIEL">ELRIEL</h1>
-        <div class="logo-subtitle">TERMINAL ACCESS v1.0</div>
+        <div class="logo-subtitle">DIGITAL WASTELAND v1.3.7</div>
       </div>
       <div class="user-panel">
         <div id="user-status">
@@ -32,7 +49,10 @@
     </header>
     
     <div class="content-wrapper">
-      <nav class="sidebar">
+      <!-- Mobile Navigation Toggle -->
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle">TOGGLE NAVIGATION</button>
+      
+      <nav class="sidebar" id="main-sidebar">
         <div class="nav-section">
           <h3 class="nav-title">MAIN SYSTEMS</h3>
           <ul class="nav-links">
@@ -40,6 +60,7 @@
             <li><a href="/feed/bleedstream">BLEEDSTREAM</a></li>
             <li><a href="/glyph/crucible">GLYPH CRUCIBLE</a></li>
             <li><a href="/whisper/board">WHISPERBOARD</a></li>
+            <li><a href="/forum/scrapyard">SCRAPYARD</a></li>
           </ul>
         </div>
         <div class="nav-section">
@@ -60,249 +81,248 @@
       </nav>
       
       <main class="main-content">
-        <% if (typeof flash !== 'undefined') { %>
-          <% if (flash.message) { %><div class="flash-message" style="color: var(--terminal-green); margin-bottom: 1rem;"><%= flash.message %></div><% } %>
-          <% if (flash.error) { %><div class="flash-error" style="color: var(--terminal-red); margin-bottom: 1rem;"><%= flash.error %></div><% } %>
-        <% } %>
-        <section class="profile-edit-panel">
+        <section class="panel profile-edit-panel">
+          <div class="scanner-line"></div>
           <div class="panel-header">
             <h2>EDIT PROFILE</h2>
             <div class="status-indicator">CONFIG</div>
           </div>
-          <div class="profile-edit-content">
-            <!-- Profile edit navigation -->
-            <div class="profile-nav-bar">
-              <a href="#basics" class="profile-nav-item active">BASICS</a>
-              <a href="#background" class="profile-nav-item">BACKGROUND</a>
-              <a href="#glyph" class="profile-nav-item">SIGIL</a>
-              <a href="#custom" class="profile-nav-item">CUSTOM CODE</a>
-              <a href="#widgets" class="profile-nav-item">WIDGETS</a>
-            </div>
-            
-            <form id="profile-edit-form">
-              <!-- Basics section -->
-              <div id="basics" class="edit-section">
-                <h3 class="section-header">BASIC INFORMATION</h3>
-                <div class="form-group">
-                  <label for="avatar">AVATAR:</label>
-                  <input type="file" id="avatar" name="avatar" accept="image/*">
-                  <div id="current-avatar-preview">
-                    <% if (profile.avatar_url) { %><img src="<%= profile.avatar_url %>" alt="Current Avatar" style="width:100px;height:100px;border-radius:50%;"><% } else { %><span>NO AVATAR SET</span><% } %>
-                  </div>
-                  <p class="help-text">Upload your profile avatar (triggers /profile/avatar).</p>
-                </div>
-                
-                <div class="form-group">
-                  <label for="status">STATUS:</label>
-                  <input type="text" id="status" name="status" maxlength="100" placeholder="Enter your status message..." value="<%= profile.status || '' %>">
-                  <p class="help-text">Your status message will appear on your profile.</p>
-                </div>
-                
-                <div class="form-group">
-                  <label for="bio">BIO:</label>
-                  <textarea id="bio" name="bio" rows="5" maxlength="2000" placeholder="Enter your bio in markdown..." class="markdown-textarea"><%= profile.bio || '' %></textarea>
-                  <div id="bio-preview" class="preview" style="border:1px solid var(--terminal-green); padding:0.5rem; margin-top:0.5rem; min-height: 100px;">
-                    <!-- Live preview: marked.js renders bio here -->
-                  </div>
-                  <p class="help-text">Your bio will be rendered as markdown on your profile sidebar.</p>
-                </div>
-                
-                <div class="form-group">
-                  <label for="district">DISTRICT:</label>
-                  <select id="district" name="districtId">
-                    <!-- Districts will be injected here -->
-                  </select>
-                  <p class="help-text">Choose the district your terminal belongs to.</p>
-                </div>
-                
-                <div class="form-group">
-                  <label for="layout_type">LAYOUT TYPE:</label>
-                  <select id="layout_type" name="layout_type">
-                    <option value="one-column" <%= profile.layout_type === 'one-column' ? 'selected' : '' %>>One Column (Markdown)</option>
-                    <option value="two-column" <%= profile.layout_type === 'two-column' ? 'selected' : '' %>>Two Column (Zones)</option>
-                  </select>
-                  <p class="help-text">Choose your profile main content layout.</p>
-                </div>
-                
-                <div class="form-group">
-                  <label for="blog-layout">BLOG LAYOUT:</label>
-                  <select id="blog-layout" name="blogLayout">
-                    <option value="feed">Traditional Feed</option>
-                    <option value="grid">Icon Grid</option>
-                  </select>
-                  <p class="help-text">Choose how your posts will be displayed on your profile.</p>
-                </div>
-                
-                <!-- Sidebar Widget Slot -->
-                <div class="form-group">
-                  <label for="sidebar_type">SIDEBAR WIDGET (Optional):</label>
-                  <select id="sidebar_type" name="sidebar_type">
-                    <option value="">None</option>
-                    <option value="text">Text</option>
-                    <option value="iframe">Iframe</option>
-                    <option value="image">Image</option>
-                  </select>
-                  <textarea id="sidebar_content" name="sidebar_content" rows="3" style="display:none;" placeholder="Enter sidebar content..."></textarea>
-                  <input type="url" id="sidebar_url" name="sidebar_url" style="display:none;" placeholder="Enter image/iframe URL...">
-                  <p class="help-text">Add an optional widget to your sidebar (stored in sidebar_config JSONB).</p>
-                </div>
+          <div class="panel-content">
+            <div class="profile-edit-content">
+              <!-- Profile edit navigation -->
+              <div class="profile-nav-bar">
+                <a href="#basics" class="profile-nav-item active">BASICS</a>
+                <a href="#background" class="profile-nav-item">BACKGROUND</a>
+                <a href="#glyph" class="profile-nav-item">SIGIL</a>
+                <a href="#custom" class="profile-nav-item">CUSTOM CODE</a>
+                <a href="#widgets" class="profile-nav-item">WIDGETS</a>
               </div>
               
-              <!-- Background section -->
-              <div id="background" class="edit-section">
-                <h3 class="section-header">BACKGROUND CUSTOMIZATION</h3>
-                <div class="form-group">
-                  <label for="background">PROFILE BACKGROUND IMAGE:</label>
-                  <input type="file" id="background" name="background" accept="image/*">
-                  <div id="current-background-preview">
-                    <!-- Current background preview will be injected here -->
-                  </div>
-                  <div class="bg-options">
-                    <div class="form-check">
-                      <input type="radio" id="bg-single" name="backgroundType" value="single" checked>
-                      <label for="bg-single">Single Image</label>
-                    </div>
-                    <div class="form-check">
-                      <input type="radio" id="bg-tiled" name="backgroundType" value="tiled">
-                      <label for="bg-tiled">Tiled Pattern</label>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-group">
-                  <label for="headerImage">HEADER IMAGE (OPTIONAL):</label>
-                  <input type="file" id="headerImage" name="headerImage" accept="image/*">
-                  <div id="current-header-preview">
-                    <!-- Current header preview will be injected here -->
-                  </div>
-                  <p class="help-text">Add an optional header image that will appear at the top of your profile.</p>
-                </div>
-                
-                <div class="form-group">
-                  <label for="theme-template">PROFILE THEME:</label>
-                  <select id="theme-template" name="themeTemplate">
-                    <option value="default">Default Terminal</option>
-                    <option value="cyberpunk">Cyberpunk Neon</option>
-                    <option value="glitchcore">Glitchcore Aesthetic</option>
-                    <option value="vaporwave">Vaporwave Remix</option>
-                    <option value="darkweb">Dark Web Terminal</option>
-                    <option value="matrix">Matrix Code</option>
-                  </select>
-                  <p class="help-text">Select a theme template or use custom CSS to create your own unique look.</p>
-                </div>
-              </div>
-              
-              <!-- Glyph/Sigil section -->
-              <div id="glyph" class="edit-section">
-                <h3 class="section-header">PROFILE SIGIL</h3>
-                <div class="form-group">
-                  <label>CURRENT SIGIL:</label>
-                  <div id="current-glyph-preview" class="current-glyph-preview">
-                    <!-- Current glyph preview will be injected here -->
-                  </div>
-                  <p class="help-text">This is your current profile sigil. Select a different one below or visit the Glyph Crucible to create a new one.</p>
-                </div>
-                
-                <div class="form-group">
-                  <label>AVAILABLE SIGILS:</label>
-                  <div class="glyph-selection" id="glyph-selection">
-                    <!-- User's glyphs will be injected here -->
-                  </div>
-                  <input type="hidden" id="selected-glyph-id" name="glyphId">
-                </div>
-                
-                <div class="form-group">
-                  <label>SIGIL DISPLAY OPTIONS:</label>
-                  <div class="form-check">
-                    <input type="checkbox" id="enable-3d" name="enable3d" value="1">
-                    <label for="enable-3d">Enable 3D Rendering</label>
-                  </div>
-                  
-                  <div class="form-group rotation-speed" style="display: none;">
-                    <label for="rotation-speed">Rotation Speed:</label>
-                    <input type="range" id="rotation-speed" name="rotationSpeed" min="1" max="10" value="3">
-                    <div class="range-values">
-                      <span>Slow</span>
-                      <span>Fast</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Custom Code section -->
-              <div id="custom" class="edit-section">
-                <h3 class="section-header">CUSTOM CODE</h3>
-                <div class="form-group">
-                  <label for="custom-css">CUSTOM CSS:</label>
-                  <textarea id="custom-css" name="customCss" maxlength="10000" placeholder="/* Add your custom CSS here */"></textarea>
-                  <p class="help-text">Custom CSS will be applied to your profile page.</p>
-                </div>
-                
-                <div class="form-group">
-                  <label for="custom-html">CUSTOM HTML:</label>
-                  <textarea id="custom-html" name="customHtml" maxlength="20000" placeholder="<!-- Add your custom HTML here -->"></textarea>
-                  <p class="help-text">Custom HTML will be displayed in your profile's custom code section.</p>
-                </div>
-              </div>
-              
-              <!-- Widgets/Cards Section (for two-column zones) -->
-              <div id="widgets" class="edit-section">
-                <h3 class="section-header">PROFILE WIDGETS (Two-Column Zones)</h3>
-                <div class="widget-manager">
+              <form id="profile-edit-form">
+                <!-- Basics section -->
+                <div id="basics" class="edit-section">
+                  <h3 class="section-header">BASIC INFORMATION</h3>
                   <div class="form-group">
-                    <label for="widget-zone">ZONE:</label>
-                    <select id="widget-zone">
-                      <option value="main-left">Main Left</option>
-                      <option value="main-right">Main Right</option>
-                    </select>
-                    <label for="widget-type">TYPE:</label>
-                    <select id="widget-type" class="widget-type-select" aria-label="Select widget type">
-                      <option value="">-- Select Widget Type --</option>
-                      <option value="text">Text Block</option>
-                      <option value="image">Image Gallery</option>
-                      <option value="video">Video</option>
-                      <option value="iframe">Embedded Content/iframe</option>
-                    </select>
-                    <button type="button" id="add-widget-btn" class="control-btn">ADD WIDGET</button>
+                    <label for="avatar">AVATAR:</label>
+                    <input type="file" id="avatar" name="avatar" accept="image/*">
+                    <div id="current-avatar-preview">
+                      <!-- Populated via JavaScript -->
+                    </div>
+                    <p class="help-text">Upload your profile avatar (triggers /profile/avatar).</p>
                   </div>
                   
-                  <div class="widgets-container" id="widgets-container">
-                    <!-- Widget items will be added dynamically here with zone -->
-                    <div class="empty-widget-message">No widgets added yet. Use the controls above to add widgets to zones (stored in profile_containers with zone).</div>
+                  <div class="form-group">
+                    <label for="status">STATUS:</label>
+                    <input type="text" id="status" name="status" maxlength="100" placeholder="Enter your status message...">
+                    <p class="help-text">Your status message will appear on your profile.</p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="bio">BIO:</label>
+                    <textarea id="bio" name="bio" rows="5" maxlength="2000" placeholder="Enter your bio in markdown..." class="markdown-textarea"></textarea>
+                    <div id="bio-preview" class="preview" style="border:1px solid var(--terminal-green); padding:0.5rem; margin-top:0.5rem; min-height: 100px;">
+                      <!-- Live preview: marked.js renders bio here -->
+                    </div>
+                    <p class="help-text">Your bio will be rendered as markdown on your profile sidebar.</p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="district">DISTRICT:</label>
+                    <select id="district" name="districtId">
+                      <!-- Districts will be injected here -->
+                    </select>
+                    <p class="help-text">Choose the district your terminal belongs to.</p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="layout_type">LAYOUT TYPE:</label>
+                    <select id="layout_type" name="layout_type">
+                      <option value="one-column">One Column (Markdown)</option>
+                      <option value="two-column">Two Column (Zones)</option>
+                    </select>
+                    <p class="help-text">Choose your profile main content layout.</p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="blog-layout">BLOG LAYOUT:</label>
+                    <select id="blog-layout" name="blogLayout">
+                      <option value="feed">Traditional Feed</option>
+                      <option value="grid">Icon Grid</option>
+                    </select>
+                    <p class="help-text">Choose how your posts will be displayed on your profile.</p>
+                  </div>
+                  
+                  <!-- Sidebar Widget Slot -->
+                  <div class="form-group">
+                    <label for="sidebar_type">SIDEBAR WIDGET (Optional):</label>
+                    <select id="sidebar_type" name="sidebar_type">
+                      <option value="">None</option>
+                      <option value="text">Text</option>
+                      <option value="iframe">Iframe</option>
+                      <option value="image">Image</option>
+                    </select>
+                    <textarea id="sidebar_content" name="sidebar_content" rows="3" style="display:none;" placeholder="Enter sidebar content..."></textarea>
+                    <input type="url" id="sidebar_url" name="sidebar_url" style="display:none;" placeholder="Enter image/iframe URL...">
+                    <p class="help-text">Add an optional widget to your sidebar (stored in sidebar_config JSONB).</p>
                   </div>
                 </div>
-              </div>
-              
-              <!-- One-Column Editor -->
-              <div id="one-column-editor" class="edit-section" style="display: none;">
-                <h3 class="section-header">MAIN CONTENT (One-Column Markdown)</h3>
-                <div class="form-group">
-                  <label for="main_content_markdown">MAIN CONTENT:</label>
-                  <textarea id="main_content_markdown" name="main_content_markdown" rows="10" maxlength="5000" placeholder="Enter main content in markdown..." class="markdown-textarea"></textarea>
-                  <input type="hidden" id="main_content" name="main_content">
-                  <div id="main-preview" class="preview" style="border:1px solid var(--terminal-green); padding:0.5rem; margin-top:0.5rem; min-height: 200px;">
-                    <!-- Live preview: marked.js renders main content here -->
+                
+                <!-- Background section -->
+                <div id="background" class="edit-section">
+                  <h3 class="section-header">BACKGROUND CUSTOMIZATION</h3>
+                  <div class="form-group">
+                    <label for="background">PROFILE BACKGROUND IMAGE:</label>
+                    <input type="file" id="background" name="background" accept="image/*">
+                    <div id="current-background-preview">
+                      <!-- Current background preview will be injected here -->
+                    </div>
+                    <div class="bg-options">
+                      <div class="form-check">
+                        <input type="radio" id="bg-single" name="backgroundType" value="single" checked>
+                        <label for="bg-single">Single Image</label>
+                      </div>
+                      <div class="form-check">
+                        <input type="radio" id="bg-tiled" name="backgroundType" value="tiled">
+                        <label for="bg-tiled">Tiled Pattern</label>
+                      </div>
+                    </div>
                   </div>
-                  <p class="help-text">Full-width markdown content for one-column layout (stored in main_content JSONB).</p>
+                  
+                  <div class="form-group">
+                    <label for="headerImage">HEADER IMAGE (OPTIONAL):</label>
+                    <input type="file" id="headerImage" name="headerImage" accept="image/*">
+                    <div id="current-header-preview">
+                      <!-- Current header preview will be injected here -->
+                    </div>
+                    <p class="help-text">Add an optional header image that will appear at the top of your profile.</p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="theme-template">PROFILE THEME:</label>
+                    <select id="theme-template" name="themeTemplate">
+                      <option value="default">Default Terminal</option>
+                      <option value="cyberpunk">Cyberpunk Neon</option>
+                      <option value="glitchcore">Glitchcore Aesthetic</option>
+                      <option value="vaporwave">Vaporwave Remix</option>
+                      <option value="darkweb">Dark Web Terminal</option>
+                      <option value="matrix">Matrix Code</option>
+                    </select>
+                    <p class="help-text">Select a theme template or use custom CSS to create your own unique look.</p>
+                  </div>
                 </div>
-              </div>
+                
+                <!-- Glyph/Sigil section -->
+                <div id="glyph" class="edit-section">
+                  <h3 class="section-header">PROFILE SIGIL</h3>
+                  <div class="form-group">
+                    <label>CURRENT SIGIL:</label>
+                    <div id="current-glyph-preview" class="current-glyph-preview">
+                      <!-- Current glyph preview will be injected here -->
+                    </div>
+                    <p class="help-text">This is your current profile sigil. Select a different one below or visit the Glyph Crucible to create a new one.</p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>AVAILABLE SIGILS:</label>
+                    <div class="glyph-selection" id="glyph-selection">
+                      <!-- User's glyphs will be injected here -->
+                    </div>
+                    <input type="hidden" id="selected-glyph-id" name="glyphId">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>SIGIL DISPLAY OPTIONS:</label>
+                    <div class="form-check">
+                      <input type="checkbox" id="enable-3d" name="enable3d" value="1">
+                      <label for="enable-3d">Enable 3D Rendering</label>
+                    </div>
+                    
+                    <div class="form-group rotation-speed" style="display: none;">
+                      <label for="rotation-speed">Rotation Speed:</label>
+                      <input type="range" id="rotation-speed" name="rotationSpeed" min="1" max="10" value="3">
+                      <div class="range-values">
+                        <span>Slow</span>
+                        <span>Fast</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Custom Code section -->
+                <div id="custom" class="edit-section">
+                  <h3 class="section-header">CUSTOM CODE</h3>
+                  <div class="form-group">
+                    <label for="custom-css">CUSTOM CSS:</label>
+                    <textarea id="custom-css" name="customCss" rows="8" maxlength="10000" placeholder="/* Add your custom CSS here */"></textarea>
+                    <p class="help-text">Custom CSS will be applied to your profile page.</p>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="custom-html">CUSTOM HTML:</label>
+                    <textarea id="custom-html" name="customHtml" rows="8" maxlength="20000" placeholder="<!-- Add your custom HTML here -->"></textarea>
+                    <p class="help-text">Custom HTML will be displayed in your profile's custom code section.</p>
+                  </div>
+                </div>
+                
+                <!-- Widgets/Cards Section (for two-column zones) -->
+                <div id="widgets" class="edit-section">
+                  <h3 class="section-header">PROFILE WIDGETS (Two-Column Zones)</h3>
+                  <div class="widget-manager">
+                    <div class="form-group">
+                      <label for="widget-zone">ZONE:</label>
+                      <select id="widget-zone">
+                        <option value="main-left">Main Left</option>
+                        <option value="main-right">Main Right</option>
+                      </select>
+                      <label for="widget-type">TYPE:</label>
+                      <select id="widget-type" class="widget-type-select" aria-label="Select widget type">
+                        <option value="">-- Select Widget Type --</option>
+                        <option value="text">Text Block</option>
+                        <option value="image">Image Gallery</option>
+                        <option value="video">Video</option>
+                        <option value="iframe">Embedded Content/iframe</option>
+                      </select>
+                      <button type="button" id="add-widget-btn" class="control-btn">ADD WIDGET</button>
+                    </div>
+                    
+                    <div class="widgets-container" id="widgets-container">
+                      <!-- Widget items will be added dynamically here with zone -->
+                      <div class="empty-widget-message">No widgets added yet. Use the controls above to add widgets to zones.</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- One-Column Editor -->
+                <div id="one-column-editor" class="edit-section" style="display: none;">
+                  <h3 class="section-header">MAIN CONTENT (One-Column Markdown)</h3>
+                  <div class="form-group">
+                    <label for="main_content_markdown">MAIN CONTENT:</label>
+                    <textarea id="main_content_markdown" name="main_content_markdown" rows="10" maxlength="5000" placeholder="Enter main content in markdown..." class="markdown-textarea"></textarea>
+                    <input type="hidden" id="main_content" name="main_content">
+                    <div id="main-preview" class="preview" style="border:1px solid var(--terminal-green); padding:0.5rem; margin-top:0.5rem; min-height: 200px;">
+                      <!-- Live preview: marked.js renders main content here -->
+                    </div>
+                    <p class="help-text">Full-width markdown content for one-column layout.</p>
+                  </div>
+                </div>
+                
+                <!-- Two-Column Editor (widgets above) -->
+                <div id="two-column-editor" class="edit-section" style="display: none;">
+                  <h3 class="section-header">MAIN ZONES (Two-Column)</h3>
+                  <p>Use the widgets section above to add to left/right zones. Backend groups via profile_containers.zone.</p>
+                  <input type="hidden" id="sidebarConfig" name="sidebarConfig" value="">
+                  <input type="hidden" id="mainContent" name="mainContent" value="">
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="submit-btn button">UPDATE PROFILE</button>
+                  <a href="/profile" class="cancel-btn button">CANCEL</a>
+                </div>
+              </form>
               
-              <!-- Two-Column Editor (widgets above) -->
-              <div id="two-column-editor" class="edit-section" style="display: none;">
-                <h3 class="section-header">MAIN ZONES (Two-Column)</h3>
-                <p>Use the widgets section above to add to left/right zones. Backend groups via profile_containers.zone.</p>
-                <input type="hidden" id="sidebarConfig" name="sidebarConfig" value="">
-                <input type="hidden" id="mainContent" name="mainContent" value="">
-              </div>
-              
-              <div class="form-actions">
-                <button type="submit" class="submit-btn">UPDATE PROFILE</button>
-                <a href="/profile" class="cancel-btn">CANCEL</a>
-              </div>
-            </form>
-            
-            <div id="message" style="color: var(--terminal-green); margin-top: 1rem;"></div>
-            <div id="error-message" style="color: var(--terminal-red); margin-top: 1rem;"></div>
+              <div id="message" style="color: var(--terminal-green); margin-top: 1rem;"></div>
+              <div id="error-message" style="color: var(--terminal-red); margin-top: 1rem;"></div>
+            </div>
           </div>
         </section>
       </main>
@@ -318,26 +338,24 @@
     </footer>
   </div>
   
-  <!-- A simplified version of the Windows 98 modal - will be implemented in the future -->
-  
   <script>
     // Inject data from server
-    console.log('__DATA__ loaded:', typeof __DATA__ !== 'undefined');
+    console.log('Profile edit page loading...');
     let data, profile, user, glyph, districts;
     try {
       data = __DATA__;
-      profile = data.profile;
+      profile = data.profile || {};
       user = data.user;
       glyph = data.glyph;
-      districts = data.districts;
+      districts = data.districts || [];
     } catch (err) {
       console.error('Error accessing __DATA__:', err);
-      // Fallback or redirect to error, but for now, proceed with defaults
+      // Fallback to defaults
       data = { profile: {}, user: null, glyph: null, districts: [] };
-      profile = data.profile;
-      user = data.user;
-      glyph = data.glyph;
-      districts = data.districts;
+      profile = {};
+      user = null;
+      glyph = null;
+      districts = [];
     }
  
     // Update user status in header
@@ -347,25 +365,35 @@
         <div class="logged-in">
           <span class="username">${user.username}</span>
           <div class="user-links">
-            <a href="/profile">PROFILE</a>
-            <a href="/auth/logout">LOGOUT</a>
+            <a href="/profile" class="button">PROFILE</a>
+            <a href="/auth/logout" class="button">LOGOUT</a>
           </div>
         </div>
       `;
     } else {
       userStatusEl.innerHTML = `
         <div class="logged-out">
-          <a href="/auth/login" class="login-btn">LOGIN</a>
-          <a href="/auth/register" class="register-btn">REGISTER</a>
+          <a href="/auth/login" class="button login-btn">LOGIN</a>
+          <a href="/auth/register" class="button register-btn">REGISTER</a>
         </div>
       `;
     }
  
     // Populate form with current profile data
     document.getElementById('status').value = profile.status || '';
+    document.getElementById('bio').value = profile.bio || '';
     document.getElementById('custom-css').value = profile.custom_css || '';
     document.getElementById('custom-html').value = profile.custom_html || '';
     document.getElementById('blog-layout').value = profile.blog_layout || 'feed';
+    document.getElementById('layout_type').value = profile.layout_type || 'two-column';
+ 
+    // Display current avatar preview
+    const currentAvatarPreview = document.getElementById('current-avatar-preview');
+    if (profile.avatar_url) {
+      currentAvatarPreview.innerHTML = `<img src="${profile.avatar_url}" alt="Current Avatar" style="width:100px;height:100px;border-radius:50%;border:2px solid var(--terminal-green);">`;
+    } else {
+      currentAvatarPreview.innerHTML = '<span style="color: var(--terminal-dim-green);">NO AVATAR SET</span>';
+    }
  
     // Populate districts dropdown
     const districtSelect = document.getElementById('district');
@@ -373,30 +401,26 @@
       const option = document.createElement('option');
       option.value = district.id;
       option.textContent = district.name;
+      if (profile.district_id === district.id) {
+        option.selected = true;
+      }
       districtSelect.appendChild(option);
     });
-    districtSelect.value = profile.district_id || 1;
  
     // Display current background preview
     const currentBackgroundPreview = document.getElementById('current-background-preview');
     if (profile.background_image) {
-      const img = document.createElement('img');
-      img.src = profile.background_image;
-      img.className = 'current-background-preview';
-      currentBackgroundPreview.appendChild(img);
+      currentBackgroundPreview.innerHTML = `<img src="${profile.background_image}" alt="Current Background" class="current-background-preview" style="max-width:200px;border:2px solid var(--terminal-green);margin-top:0.5rem;">`;
     } else {
-      currentBackgroundPreview.innerHTML = '<span>NO BACKGROUND SET</span>';
+      currentBackgroundPreview.innerHTML = '<span style="color: var(--terminal-dim-green);">NO BACKGROUND SET</span>';
     }
      
     // Display current header image preview if it exists
     const currentHeaderPreview = document.getElementById('current-header-preview');
     if (profile.header_image) {
-      const img = document.createElement('img');
-      img.src = profile.header_image;
-      img.className = 'current-header-preview';
-      currentHeaderPreview.appendChild(img);
+      currentHeaderPreview.innerHTML = `<img src="${profile.header_image}" alt="Current Header" class="current-header-preview" style="max-width:200px;border:2px solid var(--terminal-green);margin-top:0.5rem;">`;
     } else {
-      currentHeaderPreview.innerHTML = '<span>NO HEADER IMAGE SET</span>';
+      currentHeaderPreview.innerHTML = '<span style="color: var(--terminal-dim-green);">NO HEADER IMAGE SET</span>';
     }
  
     // Display current glyph preview
@@ -405,12 +429,13 @@
       currentGlyphPreview.innerHTML = glyph.svg_data;
       document.getElementById('selected-glyph-id').value = glyph.id;
     } else {
-      currentGlyphPreview.innerHTML = '<span>NO SIGIL SET</span>';
+      currentGlyphPreview.innerHTML = '<span style="color: var(--terminal-dim-green);">NO SIGIL SET</span>';
     }
  
     // Display user's glyphs for selection
     const glyphSelectionEl = document.getElementById('glyph-selection');
     if (data.userGlyphs && data.userGlyphs.length > 0) {
+      glyphSelectionEl.innerHTML = ''; // Clear placeholder
       data.userGlyphs.forEach(userGlyph => {
         const glyphItem = document.createElement('div');
         glyphItem.className = 'glyph-item';
@@ -437,7 +462,7 @@
         glyphSelectionEl.appendChild(glyphItem);
       });
     } else {
-      glyphSelectionEl.innerHTML = '<span>NO SAVED SIGILS. VISIT THE GLYPH CRUCIBLE TO GENERATE SOME.</span>';
+      glyphSelectionEl.innerHTML = '<span style="color: var(--terminal-yellow);">NO SAVED SIGILS. VISIT THE <a href="/glyph/crucible" style="color: var(--terminal-green);">GLYPH CRUCIBLE</a> TO GENERATE SOME.</span>';
     }
     console.log('Form and previews initialized');
  
@@ -458,70 +483,45 @@
       document.getElementById('rotation-speed').value = profile.glyph_rotation_speed || 3;
     }
  
-    console.log('Nav handlers attaching...');
     // Add profile navigation functionality
     document.querySelectorAll('.profile-nav-item').forEach(navItem => {
       navItem.addEventListener('click', function(e) {
         e.preventDefault();
-        console.log('Nav click prevented, targetSection:', this.getAttribute('href'));
-        try {
-          // Remove active class from all nav items
-          document.querySelectorAll('.profile-nav-item').forEach(item => {
-            item.classList.remove('active');
-          });
-          // Add active class to clicked item
-          this.classList.add('active');
+        // Remove active class from all nav items
+        document.querySelectorAll('.profile-nav-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        // Add active class to clicked item
+        this.classList.add('active');
 
-          // Get the target section from href
-          const targetSection = this.getAttribute('href').substring(1);
-          console.log('Target section:', targetSection);
+        // Get the target section from href
+        const targetSection = this.getAttribute('href').substring(1);
 
-          // Hide all sections and show the target one
-          document.querySelectorAll('.edit-section').forEach(section => {
-            section.style.display = 'none';
-          });
-          console.log('All sections hidden');
+        // Hide all sections and show the target one
+        document.querySelectorAll('.edit-section').forEach(section => {
+          section.style.display = 'none';
+        });
 
-          const targetEl = document.getElementById(targetSection);
-          if (targetEl) {
-            targetEl.style.display = 'block';
-            console.log('Showing section:', targetSection);
-            // Scroll to the section
-            targetEl.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            console.error('Target section not found:', targetSection);
-          }
-        } catch (err) {
-          console.error('Error in nav click handler:', err);
+        const targetEl = document.getElementById(targetSection);
+        if (targetEl) {
+          targetEl.style.display = 'block';
+          // Scroll to the section
+          targetEl.scrollIntoView({ behavior: 'smooth' });
         }
       });
     });
  
     // Show the active section on load
     document.querySelectorAll('.edit-section').forEach((section, index) => {
-      if (index === 0) {
-        section.style.display = 'block';
-      } else {
-        section.style.display = 'none';
-      }
+      section.style.display = index === 0 ? 'block' : 'none';
     });
  
     // Check URL hash for direct section navigation
     if (window.location.hash) {
-      console.log('Page load hash detected:', window.location.hash);
-      try {
-        const targetId = window.location.hash.substring(1);
-        const targetNav = document.querySelector(`.profile-nav-item[href="#${targetId}"]`);
-        console.log('Target nav found for hash:', !!targetNav);
-
-        if (targetNav) {
-          targetNav.click();
-          console.log('Simulated nav click for hash');
-        } else {
-          console.warn('No nav item found for hash target:', targetId);
-        }
-      } catch (err) {
-        console.error('Error handling page load hash:', err);
+      const targetId = window.location.hash.substring(1);
+      const targetNav = document.querySelector(`.profile-nav-item[href="#${targetId}"]`);
+      if (targetNav) {
+        targetNav.click();
       }
     }
  
@@ -549,43 +549,29 @@
         <div class="widget-header">
           <span class="widget-type">${type.toUpperCase()}</span>
           <span class="widget-zone">${zone.replace('-', ' ').toUpperCase()}</span>
-          <button type="button" class="remove-widget-btn">Remove</button>
+          <button type="button" class="remove-widget-btn button">REMOVE</button>
         </div>
         <div class="widget-content">
           <input type="text" class="widget-title" placeholder="Title (optional)" maxlength="100">
-          <textarea class="widget-content" rows="3" placeholder="Content (text/markdown for text, URL for image/video/iframe)"></textarea>
-          <input type="text" class="widget-settings" placeholder="Settings JSON (optional, e.g., {'width': '100%'})">
+          <textarea class="widget-content-text" rows="3" placeholder="Content (text/markdown for text, URL for image/video/iframe)"></textarea>
+          <input type="text" class="widget-settings" placeholder="Settings JSON (optional)">
         </div>
       `;
  
       // Add remove handler
       widgetDiv.querySelector('.remove-widget-btn').addEventListener('click', () => {
         widgetDiv.remove();
-        // Rebuild arrays
         rebuildWidgetArrays();
       });
  
       widgetsContainer.appendChild(widgetDiv);
- 
-      // Add to appropriate array
-      const title = widgetDiv.querySelector('.widget-title').value;
-      const content = widgetDiv.querySelector('.widget-content').value;
-      const settings = widgetDiv.querySelector('.widget-settings').value ? JSON.parse(widgetDiv.querySelector('.widget-settings').value) : {};
-      const widget = { id: widgetId, type, title, content, settings };
- 
-      if (zone === 'sidebar') {
-        sidebarWidgets.push(widget);
-      } else if (zone === 'main-left') {
-        mainLeftWidgets.push(widget);
-      } else if (zone === 'main-right') {
-        mainRightWidgets.push(widget);
-      }
+      rebuildWidgetArrays();
  
       // Clear selects for next addition
       document.getElementById('widget-type').value = '';
     });
  
-    // Function to rebuild arrays from DOM (in case of direct edits)
+    // Function to rebuild arrays from DOM
     function rebuildWidgetArrays() {
       sidebarWidgets = [];
       mainLeftWidgets = [];
@@ -594,14 +580,14 @@
       document.querySelectorAll('.widget-item').forEach(item => {
         const zone = item.dataset.zone;
         const title = item.querySelector('.widget-title').value;
-        const content = item.querySelector('.widget-content').value;
+        const content = item.querySelector('.widget-content-text').value;
         const settingsInput = item.querySelector('.widget-settings');
         let settings = {};
         if (settingsInput.value) {
           try {
             settings = JSON.parse(settingsInput.value);
           } catch (e) {
-            console.error('Invalid settings JSON');
+            console.error('Invalid settings JSON:', e);
           }
         }
         const widget = {
@@ -643,7 +629,7 @@
       if (layoutType === 'one-column') {
         const markdownContent = document.getElementById('main_content_markdown').value;
         if (markdownContent) {
-          mainContentObj.markdown = markdownContent; // Backend can process this
+          mainContentObj.markdown = markdownContent;
         }
       }
    
@@ -652,27 +638,18 @@
       document.getElementById('mainContent').value = JSON.stringify(mainContentObj);
  
       const formData = new FormData(e.target);
-      console.log('FormData entries:');
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
       const messageEl = document.getElementById('message');
       const errorMessageEl = document.getElementById('error-message');
       messageEl.textContent = '';
       errorMessageEl.textContent = '';
-      console.log('Serialized sidebarConfig:', sidebarConfig);
-      console.log('Serialized mainContent:', mainContent);
-      console.log('FormData prepared, submitting to /profile/edit');
  
       try {
         const response = await fetch('/profile/edit', {
           method: 'POST',
           body: formData
         });
-        console.log('Fetch response status:', response.status, response.statusText);
+        
         const responseText = await response.text();
-        console.log('Raw response text:', responseText);
- 
         let data;
         try {
           data = JSON.parse(responseText);
@@ -680,58 +657,40 @@
           console.error('Failed to parse JSON response:', parseErr);
           throw new Error('Invalid JSON from server: ' + responseText);
         }
-        console.log('Server response data:', data);
  
         if (data.success) {
           messageEl.textContent = data.message;
-          // Optionally redirect or update UI after successful save
-          // window.location.href = '/profile';
+          setTimeout(() => {
+            window.location.href = '/profile';
+          }, 1500);
         } else {
           errorMessageEl.textContent = data.message || 'Profile update failed. Unknown error.';
         }
       } catch (error) {
         console.error('Profile update fetch error:', error);
-        console.error('Error details:', error.message);
-        errorMessageEl.textContent = 'System error. Could not connect to update server. Check console for details.';
+        errorMessageEl.textContent = 'System error. Could not connect to update server.';
       }
     });
  
     // Initialize theme selector
     const themeTemplateSelect = document.getElementById('theme-template');
-    const themePreview = document.getElementById('theme-preview');
- 
-    // Set initial theme value from profile
     if (profile.theme_template) {
       themeTemplateSelect.value = profile.theme_template;
-    }
- 
-    // Update theme preview when selection changes
-    themeTemplateSelect.addEventListener('change', function() {
-      updateThemePreview(this.value);
-    });
- 
-    // Function to update theme preview
-    function updateThemePreview(themeName) {
-      // Get available themes
-      const themes = window.profileThemes.getAll();
-      const selectedTheme = themes.find(theme => theme.id === themeName) || themes[0];
- 
-      // Update preview
-      if (themePreview) {
-        themePreview.innerHTML = `<img src="${selectedTheme.preview}" alt="${selectedTheme.name}" class="theme-preview-image">`;
-      }
-    }
- 
-    // Initialize theme preview
-    if (themePreview) {
-      updateThemePreview(themeTemplateSelect.value);
     }
  
     // Toggle glitch effects
     document.getElementById('toggle-glitch').addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.toggle('glitch-active');
+      localStorage.setItem('glitch-active', document.body.classList.contains('glitch-active') ? 'true' : 'false');
     });
+    
+    // Check if glitch effects were previously enabled
+    const glitchActive = localStorage.getItem('glitch-active');
+    if (glitchActive === 'true') {
+      document.body.classList.add('glitch-active');
+    }
+    
     // Enhanced markdown preview with marked.js and DOMPurify
     function updateMarkdownPreview(textareaId, previewId) {
       const textarea = document.getElementById(textareaId);
@@ -739,13 +698,17 @@
       if (!textarea || !preview) return;
        
       textarea.addEventListener('input', () => {
-        const html = marked.parse(textarea.value);
-        preview.innerHTML = DOMPurify.sanitize(html);
+        if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+          const html = marked.parse(textarea.value);
+          preview.innerHTML = DOMPurify.sanitize(html);
+        }
       });
        
       // Initial render
-      const html = marked.parse(textarea.value);
-      preview.innerHTML = DOMPurify.sanitize(html);
+      if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined' && textarea.value) {
+        const html = marked.parse(textarea.value);
+        preview.innerHTML = DOMPurify.sanitize(html);
+      }
     }
      
     // Init previews
@@ -768,17 +731,15 @@
     toggleEditors();
     layoutSelect.addEventListener('change', toggleEditors);
  
-    // Initial state
+    // Initial state for one-column content
     if (profile.layout_type === 'one-column') {
       oneColumnEditor.style.display = 'block';
       twoColumnEditor.style.display = 'none';
-      document.getElementById('main_content_markdown').value = profile.main_content ? profile.main_content[0]?.content || '' : '';
+      const mainContentMarkdown = profile.main_content && profile.main_content[0] ? profile.main_content[0].content : '';
+      document.getElementById('main_content_markdown').value = mainContentMarkdown || '';
     }
-     
-    // Override basic MarkdownPreview in profile-widgets.js if present
-    if (typeof MarkdownPreview === 'function') {
-      window.MarkdownPreview = updateMarkdownPreview;
-    }
+    
+    console.log('Profile edit page initialized successfully');
   </script>
 </body>
-</html>]]>
+</html>

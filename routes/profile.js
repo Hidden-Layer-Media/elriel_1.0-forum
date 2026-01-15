@@ -568,6 +568,9 @@ router.post('/edit', isAuthenticated, upload.fields([
       validatedLayout = layoutType;
     }
 
+    // Build update object - MUST BE DECLARED BEFORE ANY USAGE
+    const updateData = {};
+
     // Parse and store JSONB fields - handle empty/null gracefully
     let sidebarConfigData = [];
     if (sidebarConfig && sidebarConfig !== '[]' && sidebarConfig !== '{}') {
@@ -603,8 +606,7 @@ router.post('/edit', isAuthenticated, upload.fields([
       updateData.main_content = mainContentData;
     }
 
-    // Build update object
-    const updateData = {};
+    // Continue building update object
     if (sanitizedStatus !== null) updateData.status = sanitizedStatus;
     if (sanitizedCss !== null) updateData.custom_css = sanitizedCss;
     if (sanitizedHtml !== null) updateData.custom_html = sanitizedHtml;
