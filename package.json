@@ -33,7 +33,7 @@
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^11.9.1",
     "body-parser": "^2.2.0",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.0",
     "elriel_1.0-forum": "file:",
     "escape-html": "^1.0.3",
     "express": "^5.1.0",
