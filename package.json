@@ -31,7 +31,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.38.4",
     "bcrypt": "^5.1.1",
-    "better-sqlite3": "^11.9.1",
+    "better-sqlite3": "^13.0.0",
     "body-parser": "^2.2.0",
     "dotenv": "^16.5.0",
     "elriel_1.0-forum": "file:",
